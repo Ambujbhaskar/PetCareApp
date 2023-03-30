@@ -17,7 +17,7 @@
 </script>
 
 <nav class="navbar">
-	<div id={state["home"]}>
+	<div class={state["home"] + "-navbar-button"}>
 		<img 
 			src={"home-" + state["home"] + ".svg"} 
 			alt="home button" 
@@ -25,7 +25,7 @@
 		>
 		Home
 	</div>
-	<div id={state["vaccine"]}>
+	<div class={state["vaccine"] + "-navbar-button"}>
 		<img 
 			src={"vaccine-" + state["vaccine"] + ".svg"} 
 			alt="vaccine button" 
@@ -33,7 +33,7 @@
 		>
 		Vaccine
 	</div>	
-	<div id={state["blogs"]}>
+	<div class={state["blogs"] + "-navbar-button"}>
 		<img 
 			src={"blogs-" + state["blogs"] + ".svg"} 
 			alt="blogs button" 
@@ -41,7 +41,7 @@
 		>
 		Blogs
 	</div>	
-	<div id={state["sos"]}>
+	<div class={state["sos"] + "-navbar-button"}>
 		<img 
 			src={"sos-" + state["sos"] + ".svg"} 
 			alt="sos button" 
@@ -71,7 +71,7 @@
 		height: 2rem;
 	}
 
-	.navbar #active{
+	.navbar .active-navbar-button{
 		font-weight: bold;
 	}
 </style>
