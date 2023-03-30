@@ -17,7 +17,7 @@
 </script>
 
 <nav class="navbar">
-	<div>
+	<div id={state["home"]}>
 		<img 
 			src={"home-" + state["home"] + ".svg"} 
 			alt="home button" 
@@ -25,7 +25,7 @@
 		>
 		Home
 	</div>
-	<div>
+	<div id={state["vaccine"]}>
 		<img 
 			src={"vaccine-" + state["vaccine"] + ".svg"} 
 			alt="vaccine button" 
@@ -33,7 +33,7 @@
 		>
 		Vaccine
 	</div>	
-	<div>
+	<div id={state["blogs"]}>
 		<img 
 			src={"blogs-" + state["blogs"] + ".svg"} 
 			alt="blogs button" 
@@ -41,7 +41,7 @@
 		>
 		Blogs
 	</div>	
-	<div>
+	<div id={state["sos"]}>
 		<img 
 			src={"sos-" + state["sos"] + ".svg"} 
 			alt="sos button" 
@@ -52,7 +52,6 @@
 </nav>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400;1,500&display=swap');
 
 	.navbar {
 		display: flex;
@@ -64,12 +63,15 @@
 		flex-flow: column;
 		justify-content: center;
 		align-items: center;
-		font-family: 'Karla', sans-serif;
 		font-size: 1rem;
 		gap: 2px;
 	}
 
 	.navbar div img {
 		height: 2rem;
+	}
+
+	.navbar #active{
+		font-weight: bold;
 	}
 </style>

@@ -1,1 +1,5 @@
-<p>welcome to the home page</p>
+<script>
+	import Dropdown from "./Dropdown.svelte";
+</script>
+
+<Dropdown/>
