@@ -6,6 +6,7 @@
 		"blogs" : "idle",
 		"sos" : "idle",
 	};
+	$: page = state; //state mein se active page nikaal
 
 	function changeState(button) {
 		if (button === activeButton)
@@ -17,38 +18,38 @@
 </script>
 
 <nav class="navbar">
-	<div class={state["home"] + "-navbar-button"}>
-		<img 
-			src={"home-" + state["home"] + ".svg"} 
-			alt="home button" 
-			on:click={() => {changeState("home")}}
-		>
+	<a class={state["home"] + "-navbar-button"} href="/">
+			<img 
+				src={"home-" + state["home"] + ".svg"} 
+				alt="home button" 
+				on:click={() => {changeState("home")}}
+			>
 		Home
-	</div>
-	<div class={state["vaccine"] + "-navbar-button"}>
+	</a>
+	<a class={state["vaccine"] + "-navbar-button"} href="/vaccine">
 		<img 
 			src={"vaccine-" + state["vaccine"] + ".svg"} 
 			alt="vaccine button" 
 			on:click={() => {changeState("vaccine")}}
 		>
 		Vaccine
-	</div>	
-	<div class={state["blogs"] + "-navbar-button"}>
+	</a>	
+	<a class={state["blogs"] + "-navbar-button"} href="/blogs">
 		<img 
 			src={"blogs-" + state["blogs"] + ".svg"} 
 			alt="blogs button" 
 			on:click={() => {changeState("blogs")}}
 		>
 		Blogs
-	</div>	
-	<div class={state["sos"] + "-navbar-button"}>
+	</a>	
+	<a class={state["sos"] + "-navbar-button"} href="/sos">
 		<img 
 			src={"sos-" + state["sos"] + ".svg"} 
 			alt="sos button" 
 			on:click={() => {changeState("sos")}}
 		>
 		SOS
-	</div>
+	</a>
 </nav>
 
 <style>
@@ -56,9 +57,9 @@
 	.navbar {
 		display: flex;
 		justify-content: space-between;
-		padding: 1rem 2rem 1.4rem 2rem;
+		padding: 1rem 2rem 1rem 2rem;
 	}
-	.navbar div {
+	.navbar a {
 		display: flex;
 		flex-flow: column;
 		justify-content: center;
@@ -67,7 +68,7 @@
 		gap: 2px;
 	}
 
-	.navbar div img {
+	.navbar a img {
 		height: 2rem;
 	}
 

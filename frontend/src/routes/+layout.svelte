@@ -17,6 +17,7 @@
 	.app {
 		display: flex;
 		flex-direction: column;
+		height: 100svh;
 		min-height: 100vh;
 	}
 
@@ -27,5 +28,8 @@
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
+		height: 30rem;
+		max-height: 48rem;
+		overflow-y: scroll;
 	}
 </style>

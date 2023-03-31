@@ -1,6 +1,7 @@
 <script>
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import Dropdown from "./common/Dropdown.svelte";
+	import UpcomingVaccineCard from "./common/UpcomingVaccineCard.svelte";
+	import SuggestedArticles from "./common/SuggestedArticles.svelte";
 </script>
 
 <svelte:head>
@@ -9,11 +10,17 @@
 </svelte:head>
 
 <section>
-	<span class="welcome">
-		<p class="mb-4 text-brown-600 font-extrabold text-xl">
-			Pet Care App
-		</p>
-	</span>
+	<Dropdown/>
+	<div>
+		<div class="Appointment">
+			<h4>Next Vaccine Appointment</h4>
+			<UpcomingVaccineCard/>
+		</div>
+		<div class="Articles">
+			<h4>Suggested Articles</h4>
+			<SuggestedArticles/>
+		</div>
+	</div>
 </section>
 
 <style>
@@ -21,19 +28,12 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
 		flex: 0.6;
 	}
-
-	h1 {
-		width: 100%;
+	section > div {
+		margin-top: 4rem;
 	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
+	.Appointment {
+		margin-top: 3rem;
 	}
 </style>

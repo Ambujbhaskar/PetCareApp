@@ -4,12 +4,24 @@
 	--font-title: 'Karla', sans-serif;
 	--font-heading: Roboto, sans-serif;
 	--font-misc: Roboto, monospace;
+
+	--font-xs: 10px;
+	--font-s: 12px;
+	--font-m: 14px;
+	--font-l: 16px;
+	--font-xl: 18px;
+	
+
 	--color-bg: #FFFFFF;
 	--color-border: #1B1B1B;
 	--color-disabled: #F2F4D1;
 	--color-enabled: #B2D3BE;
 	--color-text-primary: #1B1B1B;
 	--color-text-secondary: #5E6073;
+
+	--radius-large: 14px;
+	--radius-small: 7px;
+
 	font-family: var(--font-title);
 	color: var(--color-text-primary);
 }
