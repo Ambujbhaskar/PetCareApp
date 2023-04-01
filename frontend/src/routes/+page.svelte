@@ -11,15 +11,13 @@
 
 <section>
 	<Dropdown/>
-	<div>
-		<div class="Appointment">
-			<h4>Next Vaccine Appointment</h4>
-			<UpcomingVaccineCard/>
-		</div>
-		<div class="Articles">
-			<h4>Suggested Articles</h4>
-			<SuggestedArticles/>
-		</div>
+	<div class="Appointment">
+		<h4>Next Vaccine Appointment</h4>
+		<UpcomingVaccineCard/>
+	</div>
+	<div class="Articles">
+		<h4>Suggested Articles</h4>
+		<SuggestedArticles/>
 	</div>
 </section>
 
@@ -30,10 +28,10 @@
 		justify-content: center;
 		flex: 0.6;
 	}
-	section > div {
-		margin-top: 4rem;
+	h4 {
+		margin-bottom: 1rem;
 	}
-	.Appointment {
-		margin-top: 3rem;
+	.Articles {
+		margin-top: 1rem;
 	}
 </style>
