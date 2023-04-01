@@ -1,19 +1,12 @@
 <script>
-    let value = "Zarun";
-    let options = [
-        {
-            src: "./zarun.png",
-            name: "Zarun",
-        },
-        {
-            src: "./zarun.png",
-            name: "Perpper",
-        },
-    ]; 
-    let state = "Idle";
+    import Option from "./Option.svelte";
 
+    export let options;
+    export let value;
+    $: option = options[value];
+
+    let state = "Idle";
     const imgsrc = "./down-arrow-idle.svg";
-    $: className = state;
 
     function handleStateChange() {
         if (state == "Idle") {
@@ -25,36 +18,77 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class={"Dropdown"+className} on:click={handleStateChange}>
-    <div class={"SelectedValue"+className}>
-        <p>{value}</p>
-        <img src={imgsrc} alt="dropdown button"/>
+<div class={"Dropdown"+state} on:click={handleStateChange}>
+    <div class={"SelectedValue"+state}>
+        <img src={option.src} alt={option.name + "'s picture"} class="RoundImg"/>
+        <p>{option.name}</p>
+        <span>
+            <img src={imgsrc} alt="dropdown button" class="DropdownButton"/>
+        </span>
     </div>
+    {#if state=="Active"}
+        <div class={"List"+state}>
+            {#each options as option, i}
+                {#if i != value}
+                    <Option
+                        key={i}
+                        bind:value={value}
+                        options={options}
+                    />
+                {/if}
+            {/each}
+        </div>
+    {/if}
 </div>
 
 <style>
     .SelectedValueIdle {
         display: flex;
-        justify-content: space-between;
-        width: 7rem;
-        padding: 0.2rem 1rem 0.2rem 1rem;
+        justify-content: flex-start;
+        width: 10rem;
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
         background-color: var(--color-disabled);
         border: solid 1px var(--color-border);
         border-radius: 1rem;
     }
     .SelectedValueActive {
         display: flex;
-        justify-content: space-between;
-        width: calc(7rem - 4px);
-        padding: 0.2rem 1rem 0.2rem 1rem;
+        justify-content: flex-start;
+        width: calc(10rem - 4px);
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
         background-color: var(--color-enabled);
         border-radius: 1rem;
     }
-    .SelectedValueIdle > img {
+    .RoundImg {
+        height: 1.5rem;
+        width: 1.5rem;
+        border-radius: 0.75rem;
+        margin-right: 0.4rem;
+    }
+    .SelectedValueIdle > span {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-grow: 1;
+    }
+    .SelectedValueActive > span {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-grow: 1;
+    }
+    .SelectedValueIdle > span > .DropdownButton {
         animation: rotateIconBack 0.3s forwards;
     }
-    .SelectedValueActive > img {
+    .SelectedValueActive > span > .DropdownButton {
         animation: rotateIcon 0.3s forwards;
+    }
+    .ListIdle {
+        opacity: 0%;
+    }
+    .ListActive {
+        animation: fade-in 0.3s;
+        overflow-y: scroll;
     }
     .DropdownIdle {
         position: absolute;
@@ -64,7 +98,7 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        width: 7rem;
+        width: 10rem;
         height: 2rem;
         border-radius: 1rem;
     }
@@ -77,8 +111,8 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        width: 7rem;
-        height: 10rem;
+        width: 10rem;
+        max-height: 10rem;
         background-color: var(--color-enabled);
         border: solid 1px var(--color-border);
         border-radius: 1rem;
@@ -88,7 +122,15 @@
             height: 2rem;
         }
         100% {
-            height: 10rem;
+            height: min-content;
+        }
+    }
+    @keyframes fade-in {
+        0% {
+            opacity: 0%;
+        }
+        100% {
+            opacity: 100%;
         }
     }
     @keyframes contract {
@@ -96,7 +138,7 @@
             height: 10rem;
         }
         100% {
-            height: 2rem;
+            height: min-content;
         }
     }
     @keyframes rotateIcon {

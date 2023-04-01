@@ -7,6 +7,7 @@
 
     function toggleArticleSave() {
         saved = !saved;
+        console.log("Bookmarked article with title: ", title);
     }
 </script>
 
