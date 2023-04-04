@@ -2,48 +2,11 @@
   import Dropdown from "../common/Dropdown.svelte";
   import UpcomingVaccineCard from "../common/UpcomingVaccineCard.svelte";
   import SuggestedArticles from "../common/SuggestedArticles.svelte";
-  let profiles = [
-    {
-      src: "./zarun.png",
-      name: "Zarun",
-    },
-    {
-      src: "./zarun.png",
-      name: "Pepper",
-    },
-    {
-      src: "./zarun.png",
-      name: "Amongus",
-    },
-    {
-      src: "./zarun.png",
-      name: "Jod",
-    },
-    {
-      src: "./zarun.png",
-      name: "Sus",
-    },
-    {
-      src: "./zarun.png",
-      name: "Rada",
-    },
-    {
-      src: "./zarun.png",
-      name: "Pogchamp",
-    },
-    {
-      src: "./zarun.png",
-      name: "Dogger",
-    },
-    {
-      src: "./zarun.png",
-      name: "Cheems",
-    },
-  ];
+
   let selectedProfile = 0;
-  export let saved;
-  export let bookMarked;
-  export let search;
+  let saved;
+  let bookMarked;
+  let search;
   let tabs = [
     { name: "CATS", active: false },
     { name: "NUTRITION", active: true },
@@ -69,7 +32,7 @@
 <section>
   <div>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center sticky top-0 bg-white/80">
       {#if !search}
         <div class="flex">
           <div
@@ -150,7 +113,7 @@
         </div>
       {/if}
     </div>
-    <div class="flex justify-between items-center m-2 mt-6 mb-6">
+    <div class="flex justify-between items-center m-2 mt-6 mb-6 ">
       {#each tabs as tab, i}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
@@ -177,9 +140,6 @@
     flex-direction: column;
     justify-content: center;
     flex: 0.6;
-  }
-  h4 {
-    margin-bottom: 1rem;
   }
   .Articles {
     margin-top: 1rem;

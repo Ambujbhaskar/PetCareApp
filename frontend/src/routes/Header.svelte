@@ -12,7 +12,7 @@
 <style>
   header {
     display: flex;
-    padding: 2rem 1rem 2.5rem 1rem;
+    padding: 2rem 1rem 4.5rem 1rem;
     align-items: center;
     justify-content: space-between;
   }
