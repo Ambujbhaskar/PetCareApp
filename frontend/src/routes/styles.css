@@ -26,3 +26,7 @@
 	font-family: var(--font-title);
 	color: var(--color-text-primary);
 }
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
