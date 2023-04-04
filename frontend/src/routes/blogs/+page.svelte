@@ -156,7 +156,9 @@
         <div
           class={`flex justify-center items-center px-3 rounded-[0.5rem]  
           border-[0.124rem] border-[#5E6073] cursor-pointer text-[0.9rem] font-medium ${
-            tab.active ? "bg-[#5E6073] text-white" : "text-[#5E6073]"
+            tab.active
+              ? "bg-[#5E6073] text-white"
+              : "text-[#5E6073] transition duration-800 ease-in-out"
           }`}
           class:selected={tab.active}
           on:click={() => setActiveTab(i)}
