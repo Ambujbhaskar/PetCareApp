@@ -17,47 +17,47 @@
 </script>
 
 <nav class="navbar">
-  <a class={state["home"] + "-navbar-button"} href="/">
+  <a class={state["home"] + "-navbar-button"} href="/" on:click={() => {
+        changeState("home");
+      }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
       src={"home-" + state["home"] + ".svg"}
       alt="home button"
-      on:click={() => {
-        changeState("home");
-      }}
+      
     />
     Home
   </a>
-  <a class={state["vaccine"] + "-navbar-button"} href="/vaccine">
+  <a class={state["vaccine"] + "-navbar-button"} href="/vaccine" on:click={() => {
+        changeState("vaccine");
+      }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
       src={"vaccine-" + state["vaccine"] + ".svg"}
       alt="vaccine button"
-      on:click={() => {
-        changeState("vaccine");
-      }}
+      
     />
     Vaccine
   </a>
-  <a class={state["blogs"] + "-navbar-button"} href="/blogs">
+  <a class={state["blogs"] + "-navbar-button"} href="/blogs" on:click={() => {
+        changeState("blogs");
+      }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
       src={"blogs-" + state["blogs"] + ".svg"}
       alt="blogs button"
-      on:click={() => {
-        changeState("blogs");
-      }}
+      
     />
     Blogs
   </a>
-  <a class={state["sos"] + "-navbar-button"} href="/sos">
+  <a class={state["sos"] + "-navbar-button"} href="/sos" on:click={() => {
+        changeState("sos");
+      }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
       src={"sos-" + state["sos"] + ".svg"}
       alt="sos button"
-      on:click={() => {
-        changeState("sos");
-      }}
+      
     />
     SOS
   </a>
