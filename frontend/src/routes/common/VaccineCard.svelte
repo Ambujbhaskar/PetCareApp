@@ -1,13 +1,15 @@
 <script>
-    let day = 17;
-    let month = "March";
-    let clinic = "Frendicoes";
-    let doctor = "Dr. Padam";
-    let time = "5:00 PM";
+    export let id = 1;
+    export let day = 17;
+    export let month = "March";
+    export let clinic = "Frendicoes";
+    export let doctor = "Dr. Padam";
+    export let time = "5:00 PM";
+    export let status = "Next";
 </script>
 
-<div class="UpcomingVaccine">
-    <span class="Date">
+<a href={`/vaccine/${id}`} class="VaccineCard">
+    <span class={"Date " + status}>
         <h1>{day}</h1>
         <h4>{month.toUpperCase()}</h4>
     </span>
@@ -18,10 +20,10 @@
             <p>{time}</p>
         </div>
     </span>
-</div>
+</a>
 
 <style>
-    .UpcomingVaccine {
+    .VaccineCard {
         border-radius: var(--radius-large);
         border: solid 1px var(--color-border);
         padding: 1rem;
@@ -33,7 +35,7 @@
         border: solid 1px var(--color-border);
         height: 6rem;
         width: 7rem;
-        background-color: var(--color-disabled);
+        /* background-color: var(--color-disabled); */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -49,6 +51,24 @@
         font-weight: 700;
         /* margin-top: -0.6rem; */
     }
+
+    .Next {
+        background-color: var(--color-disabled);
+        color: #000000;
+    }
+    .Upcoming {
+        background-color: var(--color-request);
+        color: #ffffff;
+    }
+    .Missed {
+        background-color: #1b1b1b;
+        color: #ffffff;
+    }
+    .Completed {
+        background-color: #1b1b1b;
+        color: #ffffff;
+    }
+
     .CardContentArea {
         margin-left: 1rem;
         display: flex;
@@ -82,5 +102,4 @@
         font-size: var(--font-m);
         font-weight: 500;
     }
-
 </style>

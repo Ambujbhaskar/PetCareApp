@@ -1,45 +1,12 @@
 <script>
+    // components
 	import Dropdown from "./common/Dropdown.svelte";
-	import UpcomingVaccineCard from "./common/UpcomingVaccineCard.svelte";
+	import VaccineCard from "./common/VaccineCard.svelte";
 	import SuggestedArticles from "./common/SuggestedArticles.svelte";
-    let profiles = [
-        {
-            src: "./zarun.png",
-            name: "Zarun",
-        },
-        {
-            src: "./zarun.png",
-            name: "Pepper",
-        },
-        {
-            src: "./zarun.png",
-            name: "Amongus",
-        },
-        {
-            src: "./zarun.png",
-            name: "Jod",
-        },
-        {
-            src: "./zarun.png",
-            name: "Sus",
-        },
-        {
-            src: "./zarun.png",
-            name: "Rada",
-        },
-        {
-            src: "./zarun.png",
-            name: "Pogchamp",
-        },
-        {
-            src: "./zarun.png",
-            name: "Dogger",
-        },
-        {
-            src: "./zarun.png",
-            name: "Cheems",
-        },
-    ];
+
+    // data
+    import profiles from "$lib/data/pets.json";
+
 	let selectedProfile = 0;
 </script>
 
@@ -52,7 +19,15 @@
 	<Dropdown options={profiles} value={selectedProfile} />
 	<div class="Appointment">
 		<h4>Next Vaccine Appointment</h4>
-		<UpcomingVaccineCard/>
+		<VaccineCard 
+            id={1}
+            day={17} 
+            month={"March"} 
+            clinic={"Friendicoes"} 
+            doctor={"Dr. Padam"} 
+            time={"5:00 PM"}
+            status={"Upcoming"}    
+        />
 	</div>
 	<div class="Articles">
 		<h4>Suggested Articles</h4>

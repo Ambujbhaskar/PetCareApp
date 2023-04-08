@@ -5,7 +5,8 @@
     export let src;
     export let saved;
 
-    function toggleArticleSave() {
+    function toggleArticleSave(event) {
+        event.preventDefault();
         saved = !saved;
         console.log("Bookmarked article with title: ", title);
     }
