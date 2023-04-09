@@ -1,6 +1,4 @@
 <script>
-  import Dropdown from "../common/Dropdown.svelte";
-  import UpcomingVaccineCard from "../common/UpcomingVaccineCard.svelte";
   import SuggestedArticles from "../common/SuggestedArticles.svelte";
 
   let selectedProfile = 0;

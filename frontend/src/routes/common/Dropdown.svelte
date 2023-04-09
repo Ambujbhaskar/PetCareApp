@@ -6,7 +6,7 @@
     $: selectedOption = options[value];
 
     let state = false;
-    const imgsrc = "./down-arrow-idle.svg";
+    const imgsrc = "/down-arrow-idle.svg";
 
     function handleStateChange() {
         state=!state;

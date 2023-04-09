@@ -6,6 +6,18 @@
 
     // data
     import profiles from "$lib/data/pets.json";
+	import appointments from "$lib/data/appointments.json";
+
+	// function
+	import { getAppointmentStatus } from "./common/util.js";
+
+	let nextAppointment = appointments.reduce((acc, curr) => {
+		const status = getAppointmentStatus(curr);
+		if (status == "Next") {
+			acc = curr;
+		}
+		return acc;
+	}, null);
 
 	let selectedProfile = 0;
 </script>
@@ -19,14 +31,9 @@
 	<Dropdown options={profiles} value={selectedProfile} />
 	<div class="Appointment">
 		<h4>Next Vaccine Appointment</h4>
-		<VaccineCard 
-            id={1}
-            day={17} 
-            month={"March"} 
-            clinic={"Friendicoes"} 
-            doctor={"Dr. Padam"} 
-            time={"5:00 PM"}
-            status={"Upcoming"}    
+		<VaccineCard  
+			appointment={nextAppointment}
+			status={"Next"} 
         />
 	</div>
 	<div class="Articles">

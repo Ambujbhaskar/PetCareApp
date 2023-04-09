@@ -22,9 +22,8 @@
       }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"home-" + state["home"] + ".svg"}
+      src={"/home-" + state["home"] + ".svg"}
       alt="home button"
-      
     />
     Home
   </a>
@@ -33,9 +32,8 @@
       }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"vaccine-" + state["vaccine"] + ".svg"}
+      src={"/vaccine-" + state["vaccine"] + ".svg"}
       alt="vaccine button"
-      
     />
     Vaccine
   </a>
@@ -44,9 +42,8 @@
       }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"blogs-" + state["blogs"] + ".svg"}
+      src={"/blogs-" + state["blogs"] + ".svg"}
       alt="blogs button"
-      
     />
     Blogs
   </a>
@@ -55,9 +52,8 @@
       }}>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"sos-" + state["sos"] + ".svg"}
+      src={"/sos-" + state["sos"] + ".svg"}
       alt="sos button"
-      
     />
     SOS
   </a>

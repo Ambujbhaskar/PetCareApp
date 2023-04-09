@@ -1,47 +1,47 @@
 [
     {
         "id": 0,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Zarun"
     },
     {
         "id": 1,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Cheems"
     },
     {
         "id": 2,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Pepper"
     },
     {
         "id": 3,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Amongus"
     },
     {
         "id": 4,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Jod"
     },
     {
         "id": 5,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Sus"
     },
     {
         "id": 6,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Rada"
     },
     {
         "id": 7,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Pogchamp"
     },
     {
         "id": 8,
-        "src": "./zarun.png",
+        "src": "/zarun.png",
         "name": "Dogger"
     }
 ]
