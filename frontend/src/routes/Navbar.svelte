@@ -1,58 +1,92 @@
 <script>
+  import { page } from "$app/stores";
+  import { afterNavigate } from "$app/navigation";
+
   let activeButton = "home";
-  let state = {
-    home: "active",
-    vaccine: "idle",
-    blogs: "idle",
-    sos: "idle",
-  };
-  $: page = state; //state mein se active page nikaal
+  /*
+   * home
+   * vaccine
+   * blogs
+   * sos
+   */
+
+  afterNavigate(() => {
+    console.log("route:", $page.route.id);
+    const url = $page.route.id;
+
+    if (url == "/") {
+        changeState("home");
+    } else if (url.slice(0, 8) == "/vaccine") {
+      changeState("vaccine");
+    } else if (url.slice(0, 6) == "/blogs") {
+      changeState("blogs");
+    } else if (url.slice(0, 4) == "/sos") {
+      changeState("sos");
+    } else {
+        console.error("Navbar cannot handle given URL");
+    }
+  });
 
   function changeState(button) {
-    if (button === activeButton) return;
-    state[button] = "active";
-    state[activeButton] = "idle";
     activeButton = button;
   }
 </script>
 
 <nav class="navbar">
-  <a class={state["home"] + "-navbar-button"} href="/" on:click={() => {
-        changeState("home");
-      }}>
+  <a
+    class={(activeButton == "home" ? "active" : "idle") + "-navbar-button"}
+    href="/"
+    on:click={() => {
+      changeState("home");
+    }}
+  >
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"/home-" + state["home"] + ".svg"}
+      src={"/home-" + (activeButton == "home" ? "active" : "idle") + ".svg"}
       alt="home button"
     />
     Home
   </a>
-  <a class={state["vaccine"] + "-navbar-button"} href="/vaccine" on:click={() => {
-        changeState("vaccine");
-      }}>
+  <a
+    class={(activeButton == "vaccine" ? "active" : "idle") + "-navbar-button"}
+    href="/vaccine"
+    on:click={() => {
+      changeState("vaccine");
+    }}
+  >
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"/vaccine-" + state["vaccine"] + ".svg"}
+      src={"/vaccine-" +
+        (activeButton == "vaccine" ? "active" : "idle") +
+        ".svg"}
       alt="vaccine button"
     />
     Vaccine
   </a>
-  <a class={state["blogs"] + "-navbar-button"} href="/blogs" on:click={() => {
-        changeState("blogs");
-      }}>
+  <a
+    class={(activeButton == "blogs" ? "active" : "idle") + "-navbar-button"}
+    href="/blogs"
+    on:click={() => {
+      changeState("blogs");
+    }}
+  >
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"/blogs-" + state["blogs"] + ".svg"}
+      src={"/blogs-" + (activeButton == "blogs" ? "active" : "idle") + ".svg"}
       alt="blogs button"
     />
     Blogs
   </a>
-  <a class={state["sos"] + "-navbar-button"} href="/sos" on:click={() => {
-        changeState("sos");
-      }}>
+  <a
+    class={(activeButton == "sos" ? "active" : "idle") + "-navbar-button"}
+    href="/sos"
+    on:click={() => {
+      changeState("sos");
+    }}
+  >
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <img
-      src={"/sos-" + state["sos"] + ".svg"}
+      src={"/sos-" + (activeButton == "sos" ? "active" : "idle") + ".svg"}
       alt="sos button"
     />
     SOS
