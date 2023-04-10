@@ -1,60 +1,7 @@
 <script>
-  import { setContext } from "svelte";
-
   let viewAll = false;
-  import { v4 as uuidv4 } from "uuid";
-  let lostPets = [
-    {
-      id: uuidv4(),
-      name: "Pepper",
-      location: "Jasola",
-      contact: "12345 67890",
-      imgSrc: "/dog.png",
-    },
-    {
-      id: uuidv4(),
-      name: "Pepper",
-      location: "Jasola",
-      contact: "12345 67890",
-      imgSrc: "/dog.png",
-    },
-    {
-      id: uuidv4(),
-      name: "Pepper",
-      location: "Jasola",
-      contact: "12345 67890",
-      imgSrc: "/dog.png",
-    },
-    {
-      id: uuidv4(),
-      name: "Pepper",
-      location: "Jasola",
-      contact: "12345 67890",
-      imgSrc: "/dog.png",
-    },
-    {
-      id: uuidv4(),
-      name: "Pepper",
-      location: "Jasola",
-      contact: "12345 67890",
-      imgSrc: "/dog.png",
-    },
-    {
-      id: uuidv4(),
-      name: "Pepper",
-      location: "Jasola",
-      contact: "12345 67890",
-      imgSrc: "/dog.png",
-    },
-    {
-      id: uuidv4(),
-      name: "Pepper",
-      location: "Jasola",
-      contact: "12345 67890",
-      imgSrc: "/dog.png",
-    },
-  ];
-  setContext("SOS_LOST_PETS", lostPets);
+
+  export let data;
 </script>
 
 <section class="ml-1 flex flex-col transition-all duration-200">
@@ -82,12 +29,13 @@
     {/if}
   </div>
 
-  <!-- lost dogs -->
+  <!-- lost dogs -->[var(--color-enabled)]
+    >Call</button>
 
   <div
     class="flex flex-col gap-5 justify-between items-center mt-5 transition-all duration-200 delay-500"
   >
-    {#each lostPets as pets, i}
+    {#each data.lostPets as pets, i}
       <a href={`/sos/${pets.id}`} data-sveltekit-noscroll class="w-full">
         {#if i <= 2 && !viewAll}
           <div
