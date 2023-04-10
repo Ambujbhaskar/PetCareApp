@@ -1,13 +1,13 @@
 <script>
     export let appointment;
-    let id = appointment.id;
-    let appointmentDate = new Date(appointment.dateTime);
-    let day = appointmentDate.toLocaleDateString([], {day: "numeric"});
-    let month = appointmentDate.toLocaleDateString([], {month: "long"});
-    let time = appointmentDate.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
-    let clinic = appointment.clinic;
-    let doctor = appointment.doctor;
-    let vaccine = appointment.vaccine;
+    $: id = appointment.id;
+    $: appointmentDate = new Date(appointment.dateTime);
+    $: day = appointmentDate.toLocaleDateString([], {day: "numeric"});
+    $: month = appointmentDate.toLocaleDateString([], {month: "long"});
+    $: time = appointmentDate.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
+    $: clinic = appointment.clinic;
+    $: doctor = appointment.doctor;
+    $: vaccine = appointment.vaccine;
     export let status;
 </script>
 
@@ -22,8 +22,26 @@
             <p>{time}</p>
         </div>
         <p>{doctor}</p>
-        <h4>{vaccine}</h4>
-        
+        {#if vaccine != undefined}
+            <h4>{vaccine}</h4>
+        {/if}
+        <h5 class={status + "Text"}>{status + " Appointment"}</h5>
+        <div>
+            <button class="MapButton">
+                <!-- svelte-ignore a11y-missing-attribute -->
+                <img src={"/direction-icon.svg"} />
+                <h4>Open in Maps</h4>
+            </button>
+            <button class="EditButton">
+                <!-- svelte-ignore a11y-missing-attribute -->
+                <img src={"/edit-icon-green.svg"} />
+            </button>
+        </div>
+        <button class={"DoneButton " + (appointment.completed?"Disabled":"")} on:click={() => {}}>
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <img src={"/tick-icon-yellow.svg"} />
+            <h4>{appointment.completed?"Completed":"Mark as Done"}</h4>
+        </button>
     </span>
 </div>
 
@@ -39,7 +57,7 @@
     .Date {
         border-radius: var(--radius-small);
         border: solid 1px var(--color-border);
-        height: 6rem;
+        min-height: 6rem;
         /* background-color: var(--color-disabled); */
         display: flex;
         flex-direction: row;
@@ -67,9 +85,15 @@
         background-color: #1b1b1b;
         color: #ffffff;
     }
+    .MissedText {
+        color: red;
+    }
     .Completed {
-        background-color: #1b1b1b;
+        background-color: #b7b7b7;
         color: #ffffff;
+    }
+    .CompletedText {
+        color: green;
     }
 
     .CardContentArea {
@@ -95,6 +119,11 @@
         margin: 0;
         padding: 0;
     }
+    .CardContentArea > h5::before {
+        content: "Status ";
+        font-size: var(--font-l);
+        font-weight: 300;
+    }
     .CardContentArea > h4::before {
         content: "Vaccine ";
         font-size: var(--font-l);
@@ -114,5 +143,43 @@
         font-style: italic;
         font-size: var(--font-m);
         font-weight: 500;
+    }
+    .CardContentArea > div > button {
+        border: solid 1px #000000;
+        border-radius: 1.1rem;
+        height: 2.2rem;
+        margin-bottom: .75rem;
+        margin-top: .75rem;
+    }
+    .MapButton {
+        width: 45%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+    }
+    .DoneButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+    }
+    .EditButton {
+        padding: 0.2rem;
+        height: 2.2rem;
+        width: 2.2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .Disabled {
+        opacity: 75%;
+        cursor: disabled;
+    }
+    .CardContentArea > button {
+        border: solid 1px #000000;
+        border-radius: 1.1rem;
+        height: 2.2rem;
+        background-color: var(--color-enabled);
     }
 </style>

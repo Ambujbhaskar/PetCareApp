@@ -31,10 +31,18 @@
 	<Dropdown options={profiles} value={selectedProfile} />
 	<div class="Appointment">
 		<h4>Next Vaccine Appointment</h4>
-		<VaccineCard  
-			appointment={nextAppointment}
-			status={"Next"} 
-        />
+		{#if nextAppointment != null}
+			<VaccineCard  
+				appointment={nextAppointment}
+				status={"Next"} 
+			/>
+		{:else}
+			<div class="ImageContainer">
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<img src={"/empty-home-vaccine.svg"} />
+			</div>
+		{/if}
+
 	</div>
 	<div class="Articles">
 		<h4>Suggested Articles</h4>
@@ -54,5 +62,9 @@
 	}
 	.Articles {
 		margin-top: 1rem;
+	}
+	.ImageContainer {
+		border-radius: var(--radius-large);
+		border: solid 1px black;
 	}
 </style>

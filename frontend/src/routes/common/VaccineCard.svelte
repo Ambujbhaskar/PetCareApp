@@ -1,16 +1,17 @@
 <script>
     export let appointment;
-    let id = appointment.id;
-    let appointmentDate = new Date(appointment.dateTime);
-    let day = appointmentDate.toLocaleDateString([], {day: "numeric"});
-    let month = appointmentDate.toLocaleDateString([], {month: "long"});
-    let time = appointmentDate.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
-    let clinic = appointment.clinic;
-    let doctor = appointment.doctor;
     export let status;
+    $: id = appointment.id;
+    $: appointmentDate = new Date(appointment.dateTime);
+    $: day = appointmentDate.toLocaleDateString([], {day: "numeric"});
+    $: month = appointmentDate.toLocaleDateString([], {month: "long"});
+    $: time = appointmentDate.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
+    $: clinic = appointment.clinic;
+    $: doctor = appointment.doctor;
+    
 </script>
 
-<a href={`/vaccine/${id}`} class="VaccineCard">
+<a href={`/vaccine/${id}`} class={"VaccineCard"}>
     <span class={"Date " + status}>
         <h1>{day}</h1>
         <h4>{month.toUpperCase()}</h4>
@@ -19,6 +20,7 @@
         <h4>{clinic}</h4>
         <p>{doctor}</p>
         <div>
+            <h4 class={status+"Text"}>{status}</h4>
             <p>{time}</p>
         </div>
     </span>
@@ -66,9 +68,15 @@
         background-color: #1b1b1b;
         color: #ffffff;
     }
+    .MissedText {
+        color: red;
+    }
     .Completed {
-        background-color: #1b1b1b;
+        background-color: #b7b7b7;
         color: #ffffff;
+    }
+    .CompletedText {
+        color: green;
     }
 
     .CardContentArea {
@@ -96,7 +104,7 @@
     .CardContentArea > div {
         flex-grow: 1;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: flex-end;
     }
     .CardContentArea > div > p {
