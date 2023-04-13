@@ -42,6 +42,8 @@
       Saved: false,
     },
   ];
+  
+  import articles from "$lib/data/articles.json";
 </script>
 
 <div class="SuggestedArticlesContainer">

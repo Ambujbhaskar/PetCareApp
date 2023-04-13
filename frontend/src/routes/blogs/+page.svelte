@@ -1,6 +1,4 @@
 <script>
-  import Dropdown from "../common/Dropdown.svelte";
-  import UpcomingVaccineCard from "../common/UpcomingVaccineCard.svelte";
   import SuggestedArticles from "../common/SuggestedArticles.svelte";
 
   let selectedProfile = 0;
@@ -101,7 +99,7 @@
         </div>
       {:else}
         <div
-          class="flex items-center border-black border-2 w-[25rem] rounded-[20px]  h-[3rem] px-5 
+          class="flex items-center border-black border-2 w-[25rem] rounded-[20px] h-[3rem] px-5
           transition duration-2000 ease-in-out"
         >
           <img src="./search_icon.svg" alt="Search" class="mr-4" />
@@ -113,7 +111,7 @@
         </div>
       {/if}
     </div>
-    <div class="flex justify-between items-center m-2 mt-6 mb-6 ">
+    <div class="flex justify-between items-center m-2 mt-6 mb-6">
       {#each tabs as tab, i}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div

@@ -1,13 +1,18 @@
 <script>
-    let day = 17;
-    let month = "March";
-    let clinic = "Frendicoes";
-    let doctor = "Dr. Padam";
-    let time = "5:00 PM";
+    export let appointment;
+    export let status;
+    $: id = appointment.id;
+    $: appointmentDate = new Date(appointment.dateTime);
+    $: day = appointmentDate.toLocaleDateString([], {day: "numeric"});
+    $: month = appointmentDate.toLocaleDateString([], {month: "long"});
+    $: time = appointmentDate.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
+    $: clinic = appointment.clinic;
+    $: doctor = appointment.doctor;
+    
 </script>
 
-<div class="UpcomingVaccine">
-    <span class="Date">
+<a href={`/vaccine/${id}`} class={"VaccineCard"}>
+    <span class={"Date " + status}>
         <h1>{day}</h1>
         <h4>{month.toUpperCase()}</h4>
     </span>
@@ -15,13 +20,14 @@
         <h4>{clinic}</h4>
         <p>{doctor}</p>
         <div>
+            <h4 class={status+"Text"}>{status}</h4>
             <p>{time}</p>
         </div>
     </span>
-</div>
+</a>
 
 <style>
-    .UpcomingVaccine {
+    .VaccineCard {
         border-radius: var(--radius-large);
         border: solid 1px var(--color-border);
         padding: 1rem;
@@ -33,7 +39,7 @@
         border: solid 1px var(--color-border);
         height: 6rem;
         width: 7rem;
-        background-color: var(--color-disabled);
+        /* background-color: var(--color-disabled); */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -49,6 +55,30 @@
         font-weight: 700;
         /* margin-top: -0.6rem; */
     }
+
+    .Next {
+        background-color: var(--color-disabled);
+        color: #000000;
+    }
+    .Upcoming {
+        background-color: var(--color-request);
+        color: #ffffff;
+    }
+    .Missed {
+        background-color: #1b1b1b;
+        color: #ffffff;
+    }
+    .MissedText {
+        color: red;
+    }
+    .Completed {
+        background-color: #b7b7b7;
+        color: #ffffff;
+    }
+    .CompletedText {
+        color: green;
+    }
+
     .CardContentArea {
         margin-left: 1rem;
         display: flex;
@@ -74,7 +104,7 @@
     .CardContentArea > div {
         flex-grow: 1;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: flex-end;
     }
     .CardContentArea > div > p {
@@ -82,5 +112,4 @@
         font-size: var(--font-m);
         font-weight: 500;
     }
-
 </style>

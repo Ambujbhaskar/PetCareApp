@@ -3,36 +3,37 @@
 
     export let options;
     export let value;
-    $: option = options[value];
+    $: selectedOption = options[value];
 
-    let state = "Idle";
-    const imgsrc = "./down-arrow-idle.svg";
+    let state = false;
+    const imgsrc = "/down-arrow-idle.svg";
 
     function handleStateChange() {
-        if (state == "Idle") {
-            state = "Active";
-        } else {
-            state = "Idle";
-        }
+        state=!state;
     }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class={"Dropdown"+state} on:click={handleStateChange}>
-    <div class={"SelectedValue"+state}>
-        <img src={option.src} alt={option.name + "'s picture"} class="RoundImg"/>
-        <p>{option.name}</p>
+<div class={"Dropdown"+(state?"Active":"Idle")} on:click={handleStateChange}>
+    <div class={"SelectedValue"+(state?"Active":"Idle")}>
+        <Option
+            key={selectedOption.id}
+            bind:value={value}
+            isDropdownActive={state}
+            options={options}
+        />
         <span>
             <img src={imgsrc} alt="dropdown button" class="DropdownButton"/>
         </span>
     </div>
-    {#if state=="Active"}
-        <div class={"List"+state}>
-            {#each options as option, i}
-                {#if i != value}
+    {#if state}
+        <div class={"List"+(state?"Active":"Idle")}>
+            {#each options as option}
+                {#if option.id != value}
                     <Option
-                        key={i}
+                        key={option.id}
                         bind:value={value}
+                        isDropdownActive={state}
                         options={options}
                     />
                 {/if}
