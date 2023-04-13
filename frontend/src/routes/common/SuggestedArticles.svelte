@@ -22,7 +22,7 @@
       Type: "Nutrition",
       Title: "Wet vs Dry Food",
       Body: "When it comes to food, there are so many options ...",
-      Imgsrc: "./profile.svg",
+      Imgsrc: "./profile-idle.svg",
       Saved: false,
     },
     {

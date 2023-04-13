@@ -19,8 +19,10 @@
 	--color-enabled: #B2D3BE;
 	--color-text-primary: #1B1B1B;
 	--color-text-secondary: #5E6073;
-
+	--color-background: #89A3B2;
+	
 	--radius-large: 14px;
+	--radius-medium: 10px;
 	--radius-small: 7px;
 
 	font-family: var(--font-title);

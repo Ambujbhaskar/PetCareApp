@@ -2,11 +2,15 @@
 </script>
 
 <header>
-  <div id="visual-identity">
-    <img id="symbol" src="/symbol.svg" alt="petkit symbol" />
-    <img id="logo" src="/logo.svg" alt="petkit logo" />
-  </div>
-  <img id="profile" src="/profile.svg" alt="profile button" />
+  <a  href="/">
+    <div id="visual-identity">
+      <img id="symbol" src="/symbol.svg" alt="petkit symbol" />
+      <img id="logo" src="/logo.svg" alt="petkit logo" />
+    </div>
+  </a>
+  <a  href="/profile">
+    <img id="profile" src="/profile-idle.svg" alt="profile button"/>
+  </a>
 </header>
 
 <style>
