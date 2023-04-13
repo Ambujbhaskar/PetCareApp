@@ -23,7 +23,7 @@
     } else if (url.slice(0, 4) == "/sos") {
       changeState("sos");
     } else {
-        console.error("Navbar cannot handle given URL");
+        console.log("Navbar cannot handle given URL");
     }
   });
 
