@@ -1,4 +1,5 @@
 <script>
+    import {pet} from "$lib/stores.js";
     // components
 	import Dropdown from "./common/Dropdown.svelte";
 	import VaccineCard from "./common/VaccineCard.svelte";
@@ -18,8 +19,6 @@
 		}
 		return acc;
 	}, null);
-
-	let selectedProfile = 0;
 </script>
 
 <svelte:head>
@@ -28,7 +27,7 @@
 </svelte:head>
 
 <section>
-	<Dropdown options={profiles} value={selectedProfile} />
+	<Dropdown options={profiles} value={$pet} />
 	<div class="Appointment">
 		<h4>Next Vaccine Appointment</h4>
 		{#if nextAppointment != null}

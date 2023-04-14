@@ -1,4 +1,5 @@
 <script>
+    import {pet} from "$lib/stores.js";
     export let value;
     export let key;
     export let isDropdownActive;
@@ -8,6 +9,7 @@
 
     function selectOption() {
         value = key;
+        pet.set(key)
     }
 </script>
 

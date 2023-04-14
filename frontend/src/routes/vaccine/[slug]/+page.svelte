@@ -1,8 +1,9 @@
 <script>
+    import { pet } from "$lib/stores.js";
     import VaccineDetailCard from "../../common/VaccineDetailCard.svelte";
     import VaccineCard from "../../common/VaccineCard.svelte";
     import Dropdown from "../../common/Dropdown.svelte";
-    
+
     import profiles from "$lib/data/pets.json";
     import appointments from "$lib/data/appointments.json";
 
@@ -12,26 +13,21 @@
     export let data;
     $: status = getAppointmentStatus(data);
 
-    let selectedProfile = 0;
     let view = "Upcoming";
-    $: viewableAppointmentList = appointments.sort(vaccineComparator).filter((apt, i) => {
-        if (view == "Past") {
-            return new Date(apt.dateTime) < new Date();
-        } else {
-            return new Date(apt.dateTime) > new Date();
-        }
-    });
+    $: viewableAppointmentList = appointments
+        .sort(vaccineComparator)
+        .filter((apt, i) => {
+            if (view == "Past") {
+                return new Date(apt.dateTime) < new Date();
+            } else {
+                return new Date(apt.dateTime) > new Date();
+            }
+        });
 </script>
 
 <section>
-    <Dropdown
-        options={profiles}
-        value={selectedProfile}
-    />
-    <VaccineDetailCard
-        appointment={data}
-        {status}
-    />
+    <Dropdown options={profiles} value={$pet} />
+    <VaccineDetailCard appointment={data} {status} />
     <div class="HeadingLine">
         <p>{view + " appointments"}</p>
         <button
@@ -47,7 +43,7 @@
         {#each viewableAppointmentList as appointment, i}
             {#if !(appointment.id == data.id)}
                 <VaccineCard
-                    appointment={appointment}
+                    {appointment}
                     status={getAppointmentStatus(appointment)}
                 />
             {/if}

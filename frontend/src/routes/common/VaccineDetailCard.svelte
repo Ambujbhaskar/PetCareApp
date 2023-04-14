@@ -40,7 +40,7 @@
         <button class={"DoneButton " + (appointment.completed?"Disabled":"")} on:click={() => {}}>
             <!-- svelte-ignore a11y-missing-attribute -->
             <img src={"/tick-icon-yellow.svg"} />
-            <h4>{appointment.completed?"Completed":"Mark as Done"}</h4>
+            <h4>{appointment.completed?"Completed":"Mark as done"}</h4>
         </button>
     </span>
 </div>

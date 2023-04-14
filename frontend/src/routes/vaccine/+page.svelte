@@ -1,4 +1,5 @@
 <script>
+    import { goto } from '$app/navigation';
     import appointments from "$lib/data/appointments.json";
     
 	import { getAppointmentStatus } from "../common/util.js";
@@ -12,8 +13,7 @@
 	}, null);
 
     if (nextAppointment != null) {
-        console.log(nextAppointment.id);
-        window.location.href = `/vaccine/${nextAppointment.id}`;
+        goto(`/vaccine/${nextAppointment.id}`);
     }
 </script>
 
