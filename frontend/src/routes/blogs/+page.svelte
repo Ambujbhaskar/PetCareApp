@@ -103,20 +103,18 @@
           transition duration-2000 ease-in-out"
         >
           <img src="./search_icon.svg" alt="Search" class="mr-4" />
-          <input
-            type="text"
-            placeholder="Search"
-            class="outline-none w-[20rem]"
-          />
+          <input type="text" placeholder="Search" class="outline-none w-auto" />
         </div>
       {/if}
     </div>
-    <div class="flex justify-between items-center m-2 mt-6 mb-6">
+    <div
+      class="flex flex-auto justify-between items-center ml-1 mt-6 mb-6 w-full"
+    >
       {#each tabs as tab, i}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
-          class={`flex justify-center items-center px-3 rounded-[0.5rem]  
-          border-[0.124rem] border-[#5E6073] cursor-pointer text-[0.9rem] font-medium ${
+          class={`flex  justify-center items-center px-3 rounded-[0.5rem] py-[0.1rem] 
+          border-[0.124rem] border-[#5E6073] cursor-pointer text-[0.7rem] text-center font-medium ${
             tab.active
               ? "bg-[#5E6073] text-white"
               : "text-[#5E6073] transition duration-800 ease-in-out"

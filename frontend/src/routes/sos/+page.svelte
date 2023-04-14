@@ -38,7 +38,7 @@
       <a href={`/sos/${pets.id}`} data-sveltekit-noscroll class="w-full">
         {#if i <= 2 && !viewAll}
           <div
-            class="border-[0.12rem] rounded-[1.2rem] border-neutral-400 flex justify-center px-5 items-center w-full p-4"
+            class="border-[0.12rem] rounded-[1.2rem] border-neutral-400 flex justify-center pl-3 items-center w-full py-4"
           >
             <img
               src={pets.imgSrc}
@@ -47,9 +47,9 @@
             />
 
             <div
-              class="flex flex-col justify-evenly items-center ml-[4rem] mr-[2.5rem] p-2"
+              class="flex flex-col justify-evenly items-center ml-[2rem] mr-[1rem] p-2"
             >
-              <div class="font-bold text-[1.5rem]">Name - {pets.name}</div>
+              <div class="font-bold text-[1.3rem]">Name - {pets.name}</div>
               <div class="">Last seen - {pets.location}</div>
               <div>Contact - {pets.contact}</div>
             </div>
@@ -58,7 +58,7 @@
 
         {#if viewAll}
           <div
-            class="border-[0.12rem] rounded-[1.2rem] border-neutral-400 flex justify-center px-5 items-center w-full p-4"
+            class="border-[0.12rem] rounded-[1.2rem] border-neutral-400 flex justify-center pl-3 items-center w-full py-4"
           >
             <img
               src={pets.imgSrc}
@@ -67,9 +67,9 @@
             />
 
             <div
-              class="flex flex-col justify-evenly items-center ml-[4rem] mr-[2.5rem] p-2"
+              class="flex flex-col justify-evenly items-center ml-[2rem] mr-[1rem] p-2"
             >
-              <div class="font-bold text-[1.5rem]">Name - {pets.name}</div>
+              <div class="font-bold text-[1.3rem]">Name - {pets.name}</div>
               <div class="">Last seen - {pets.location}</div>
               <div>Contact - {pets.contact}</div>
             </div>
