@@ -27,10 +27,12 @@
   <meta name="description" content="Pet Care app" />
 </svelte:head>
 
-<section>
+<section class="box-border">
   <div>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="flex justify-between items-center sticky top-0 bg-white/80">
+    <div
+      class="flex justify-between items-center absolute top-20 mt-7 bg-white/80 w-[93%]"
+    >
       {#if !search}
         <div class="flex">
           <div
@@ -99,11 +101,11 @@
         </div>
       {:else}
         <div
-          class="flex items-center border-black border-2 w-[25rem] rounded-[20px] h-[3rem] px-5
+          class="flex flex-auto items-center border-black border-2 w-full rounded-[20px] h-[3rem] px-5
           transition duration-2000 ease-in-out"
         >
           <img src="./search_icon.svg" alt="Search" class="mr-4" />
-          <input type="text" placeholder="Search" class="outline-none w-auto" />
+          <input type="text" placeholder="Search" class="outline-none w-full" />
         </div>
       {/if}
     </div>

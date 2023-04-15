@@ -82,7 +82,7 @@
   <!-- Submit a request -->
   <a href="/sos/request-form" data-sveltekit-noscroll>
     <div
-      class="fixed right-9 bottom-[7.5rem] py-2 px-8 rounded-[2rem] bg-[var(--color-request)] text-[var(--color-bg)] border-2 border-[var(--color-text-secondary)] text-[1.2rem] cursor-pointer hover:scale-98 active:scale-95 transition-all duration-200"
+      class="fixed right-4 bottom-[7.5rem] py-2 px-8 rounded-[2rem] bg-[var(--color-request)] text-[var(--color-bg)] border-2 border-[var(--color-text-secondary)] text-[1.2rem] cursor-pointer hover:scale-98 active:scale-95 transition-all duration-200"
     >
       +Submit a request
     </div>

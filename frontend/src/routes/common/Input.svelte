@@ -2,7 +2,6 @@
   export let type = "text";
   export let value = type === "text" ? "" : null;
   export let error = "";
-  export let label = "";
   export let placeholder = "";
   export let className = "";
 

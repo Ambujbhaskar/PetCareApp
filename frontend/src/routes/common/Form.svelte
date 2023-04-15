@@ -1,6 +1,4 @@
 <script>
-  import { validate_component } from "svelte/internal";
-  import { onMount } from "svelte";
   import Input from "./Input.svelte";
 
   let avatar = "",
@@ -157,7 +155,7 @@
 </script>
 
 <section>
-  <img src="/form_img.png" alt="cat icon" class="w-full" />
+  <img src="/form_img.png" alt="cat icon" class="w-full h-[10rem]" />
   <form
     class="flex flex-col gap-3 ml-1 mt-4"
     on:submit|preventDefault={(e) => validateAndSubmit(e)}
@@ -172,6 +170,7 @@
       className="outline-none border-[0.13rem] rounded-[0.6rem] p-2 border-black/30"
     />
 
+    <!-- svelte-ignore a11y-label-has-associated-control -->
     <label id="last-seen" class="text-[1.2rem]">Last seen</label>
     <Input
       type="text"
