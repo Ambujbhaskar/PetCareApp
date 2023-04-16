@@ -15,6 +15,7 @@
   let nameError, lastSeenError, dateMissingError, rewardError;
   let errors = {};
   let touchedFields = {};
+  let valid = [0, 0, 0, 0, 0, 0];
 
   const onFileSelected = (e) => {
     let image = e.target.files[0];
@@ -32,6 +33,7 @@
     notes,
     reward,
     image: avatar,
+    valid,
   };
 
   $: errors = validate(touchedFields, result);
@@ -81,57 +83,69 @@
   const validate = () => {
     const errors = {};
     console.log(touchedFields.reward, reward, isNaN(reward));
-    if (touchedFields.name && (name === "" || /\d/.test(name))) {
+    if (touchedFields.name) {
       if (name === "") {
+        valid[0] = 0;
         scrollIntoView({ target: "#name" });
         errors.name = "Name is required";
       } else if (/\d/.test(name)) {
+        valid[0] = 0;
         scrollIntoView({ target: "#name" });
         errors.name = "Name shouldn't have integer: Eg 'Tommy', not 'Tommy 2'";
+      } else {
+        valid[0] = 1;
       }
-    } else if (touchedFields.lastSeen && lastSeen === "") {
+    }
+    if (touchedFields.lastSeen) {
       if (lastSeen === "") {
+        valid[1] = 0;
         scrollIntoView({ target: "#last-seen" });
         errors.lastSeen = "last-seen your pet field is required";
+      } else {
+        valid[1] = 1;
       }
-    } else if (
-      touchedFields.day &&
-      touchedFields.month &&
-      touchedFields.year &&
-      (day === "" ||
-        isNaN(day) ||
-        month === "" ||
-        isNaN(month) ||
-        year === "" ||
-        isNaN(year) ||
-        isValidDate(month + "/" + day + "/" + year) !== "")
-    ) {
+    }
+    if (touchedFields.day && touchedFields.month && touchedFields.year) {
       if (day === "" || month === "" || year === "") {
+        valid[2] = 0;
         scrollIntoView({ target: "#date" });
         errors.date = "Please let us know from what date, your pet is missing.";
       }
       if (isNaN(day) || isNaN(month) || isNaN(year)) {
+        valid[2] = 0;
         scrollIntoView({ target: "#date" });
         errors.date = "Please enter valid date - Must be a number.";
       }
       if (isValidDate(month + "/" + day + "/" + year) !== "") {
+        valid[2] = 0;
         scrollIntoView({ target: "#date" });
         errors.date = isValidDate(month + "/" + day + "/" + year);
+      } else {
+        valid[2] = 1;
       }
-    } else if (touchedFields.reward && (reward === "" || isNaN(reward))) {
+    }
+    if (touchedFields.reward) {
       console.log(reward);
       if (reward === "") {
+        valid[3] = 0;
         scrollIntoView({ target: "#reward" });
         errors.reward = "reward field is required";
       }
       if (isNaN(reward)) {
+        valid[3] = 0;
         scrollIntoView({ target: "#reward" });
         errors.reward = "reward must be a number!!";
+      } else {
+        valid[3] = 1;
       }
-    } else if (touchedFields.image && avatar === "") {
+    }
+    if (touchedFields.image) {
       if (avatar === "") {
+        valid[4] = 0;
         scrollIntoView({ target: "#image" });
         errors.image = "Please upload your pet image!";
+      } else {
+        valid[4] = 1;
       }
     }
 
@@ -150,6 +164,8 @@
     };
     if (!Object.keys(errors).length) {
       console.log(result);
+      e.target.reset();
+      valid = [0, 0, 0, 0, 0, 0];
     }
   };
 </script>
@@ -160,7 +176,15 @@
     class="flex flex-col gap-3 ml-1 mt-4"
     on:submit|preventDefault={(e) => validateAndSubmit(e)}
   >
-    <span id="name" class="text-[1.2rem]">Name</span>
+    <div class="flex justify-between items-center w-full">
+      <span id="name" class="text-[1.2rem]">Name</span>
+      {#if valid[0]}<img
+          src="/valid.svg"
+          alt="valid"
+          class="w-[1.2rem] h-[1.2rem]"
+        />
+      {/if}
+    </div>
     <Input
       type="text"
       bind:value={name}
@@ -171,7 +195,16 @@
     />
 
     <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label id="last-seen" class="text-[1.2rem]">Last seen</label>
+    <div class="flex justify-between items-center w-full">
+      <span id="last-seen" class="text-[1.2rem]">Last seen</span>
+      {#if valid[1]}<img
+          src="/valid.svg"
+          alt="valid"
+          class="w-[1.2rem] h-[1.2rem]"
+        />
+      {/if}
+    </div>
+
     <Input
       type="text"
       placeholder="Last Known Location"
@@ -181,7 +214,15 @@
       className="outline-none border-[0.13rem] rounded-[0.6rem] p-2 border-black/30"
     />
 
-    <label id="date" class="text-[1.2rem]">Date missing</label>
+    <div class="flex justify-between items-center w-full">
+      <label id="date" class="text-[1.2rem]">Date missing</label>
+      {#if valid[2]}<img
+          src="/valid.svg"
+          alt="valid"
+          class="w-[1.2rem] h-[1.2rem]"
+        />
+      {/if}
+    </div>
     <div class="flex flex-auto text-[0.8rem]">
       <input
         type="text"
@@ -216,7 +257,16 @@
       class="outline-none border-[0.13rem] h-[7rem] rounded-[0.6rem] p-2 border-black/30"
     />
 
-    <label id="reward" class="text-[1.2rem]">Reward</label>
+    <div class="flex justify-between items-center w-full">
+      <label id="reward" class="text-[1.2rem]">Reward</label>
+      {#if valid[3]}<img
+          src="/valid.svg"
+          alt="valid"
+          class="w-[1.2rem] h-[1.2rem]"
+        />
+      {/if}
+    </div>
+
     <input
       type="text"
       placeholder="Enter the reward amount"
@@ -228,7 +278,15 @@
       <span class="text-red-500">* {errors.reward}</span>
     {/if}
 
-    <label id="image" class="text-[1.2rem]">Upload pictures</label>
+    <div class="flex justify-between items-center w-full">
+      <label id="image" class="text-[1.2rem]">Upload pictures</label>
+      {#if valid[4]}<img
+          src="/valid.svg"
+          alt="valid"
+          class="w-[1.2rem] h-[1.2rem]"
+        />
+      {/if}
+    </div>
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
