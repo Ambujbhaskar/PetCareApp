@@ -1,4 +1,5 @@
 <script>
+    import { goto } from '$app/navigation';
     import Option from "./Option.svelte";
 
     export let options;
@@ -10,6 +11,9 @@
 
     function handleStateChange() {
         state=!state;
+    }
+    function addPet() {
+        goto("/profile/addpet");
     }
 </script>
 
@@ -37,8 +41,15 @@
                         options={options}
                     />
                 {/if}
-            {/each}
+            {/each}        
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div class={state?"Default NoPadding":"Default IdleColor NoPadding"} on:click={addPet}>
+                <img src={"/AddWithCircle.png"} alt={"add symbol"} class="RoundImg" />
+                <p>Add pet</p>
+            </div>
         </div>
+                
+
     {/if}
 </div>
 
@@ -46,6 +57,7 @@
     .SelectedValueIdle {
         display: flex;
         justify-content: flex-start;
+        align-items: center;
         width: 10rem;
         padding: 0.2rem 0.4rem 0.2rem 0.4rem;
         background-color: var(--color-disabled);
@@ -61,10 +73,14 @@
         border-radius: 1rem;
     }
     .RoundImg {
+        height: 1rem;
+        width: 1rem;
+        border-radius: 0.5rem;
+        margin: .15rem;
+        margin-left: 0.4rem;
+        margin-right: 0.5rem;
         height: 1.5rem;
         width: 1.5rem;
-        border-radius: 0.75rem;
-        margin-right: 0.4rem;
     }
     .SelectedValueIdle > span {
         display: flex;
@@ -157,5 +173,23 @@
         100% {
             transform: rotate(0deg);
         }
+    }
+    .Default {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: calc(10rem - 4px);
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+        background-color: var(--color-enabled);
+        border-radius: 1rem;
+    }
+    .Default:hover {
+        cursor: pointer;
+    }
+    .IdleColor {
+        background-color: var(--color-disabled);
+    }
+    .NoPadding {
+        padding: 0;
     }
 </style>
