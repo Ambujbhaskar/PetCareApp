@@ -36,9 +36,8 @@
       {#if !search}
         <div class="flex">
           <div
-            class={`border-black rounded-[20px] border-[0.13rem] w-[12rem] h-[3rem] flex px-5 justify-between 
-            items-center cursor-pointer mr-2
-      ${bookMarked && "bg-[#F2F4D1]"}`}
+            class={`border-black rounded-[1rem] border-[0.13rem] w-[12rem] h-[2rem] flex px-5 justify-between 
+            items-center cursor-pointer mr-2 ${bookMarked && "bg-[#F2F4D1]"}`}
             on:click={() => {
               bookMarked = true;
             }}
@@ -62,14 +61,14 @@
               on:click={() => {
                 bookMarked = false;
               }}
-              class="cursor-pointer transition duration-800 ease-in-out delay-700"
+              class="cursor-pointer transition duration-800 ease-in-out delay-700 h-[2rem]"
             />
           {/if}
         </div>
       {:else}
         <div
-          class={`border-black rounded-full border-2 h-[3rem] flex px-5 justify-between items-center cursor-pointer mr-2
-  ${bookMarked && "bg-[#F2F4D1]"}`}
+          class={`border-black rounded-full border-2 h-[2rem] flex px-3 justify-between items-center cursor-pointer mr-2
+                  ${bookMarked && "bg-[#F2F4D1]"}`}
           on:click={() => {
             bookMarked = true;
             search = false;
@@ -89,7 +88,7 @@
       {/if}
 
       {#if !search}
-        <div class="transition duration-800 ease-in-out">
+        <div class="transition duration-800 ease-in-out rounded-[1rem] h-[2rem] ">
           <img
             src={"./search.svg"}
             alt="Search"
@@ -101,7 +100,7 @@
         </div>
       {:else}
         <div
-          class="flex flex-auto items-center border-black border-2 w-full rounded-[20px] h-[3rem] px-5
+          class="flex flex-auto items-center border-black border-2 w-full rounded-[1rem] h-[2rem] px-5
           transition duration-2000 ease-in-out"
         >
           <img src="./search_icon.svg" alt="Search" class="mr-4" />
