@@ -11,7 +11,6 @@
    */
 
   afterNavigate(() => {
-    console.log("route:", $page.route.id);
     const url = $page.route.id;
 
     if (url == "/") {
@@ -22,8 +21,6 @@
       changeState("blogs");
     } else if (url.slice(0, 4) == "/sos") {
       changeState("sos");
-    } else {
-        console.log("Navbar cannot handle given URL");
     }
   });
 

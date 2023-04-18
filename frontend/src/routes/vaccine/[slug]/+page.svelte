@@ -1,4 +1,5 @@
 <script>
+    import { goto } from "$app/navigation";
     import { pet } from "$lib/stores.js";
     import VaccineDetailCard from "../../common/VaccineDetailCard.svelte";
     import VaccineCard from "../../common/VaccineCard.svelte";
@@ -25,7 +26,7 @@
         });
 </script>
 
-<section>
+<section class="VaccinePage">
     <Dropdown options={profiles} value={$pet} />
     <VaccineDetailCard appointment={data} {status} />
     <div class="HeadingLine">
@@ -49,6 +50,15 @@
             {/if}
         {/each}
     </section>
+    <button
+        class="FloatingButton"
+        on:click={() => {
+            goto("/vaccine/addVaccineSchedule");
+        }}
+    >
+        <img src="/addiconWhite.png" alt="Add Icon" class="FloatingButtonImg" />
+        <p>Add vaccine schedule</p>
+    </button>
 </section>
 
 <style>
@@ -70,5 +80,25 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+    }
+    .FloatingButton {
+        z-index: 10;
+        position: absolute;
+        bottom: 6rem;
+        right: 1rem;
+        background-color: var(--color-background);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 3rem;
+        width: 15rem;
+        color: white;
+        border-radius: 1.5rem;
+        border: solid 1.5px #1b1b1b;
+        font-size: var(--font-xl);
+        box-shadow: #1b1b1b 0px 1px 1px;
+    }
+    .VaccinePage::-webkit-scrollbar {
+        display: none;
     }
 </style>
