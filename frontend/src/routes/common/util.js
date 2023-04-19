@@ -1,16 +1,13 @@
-import appointments from "$lib/data/appointments.json";
-
-export function getAppointmentStatus(appointment) {
+export function getAppointmentStatus(appointment ,appointments) {
     const thisDate = new Date();
     appointments.sort(vaccineComparator);
+    // console.log("apts:",appointments);
     const reducer = (accumulator, current, ind) => {
         let curDate = new Date(current.dateTime);
-        if (accumulator < -1) {
+        if (accumulator < -1)
             return accumulator;
-        }
-        if (curDate < thisDate) {
+        if (curDate < thisDate)
             accumulator = ind;
-        }
         if (current.dateTime == appointment.dateTime) {
             if (ind - accumulator == 1) {
                 // next appointment

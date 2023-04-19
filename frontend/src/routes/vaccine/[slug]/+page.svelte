@@ -1,21 +1,21 @@
 <script>
     import { goto } from "$app/navigation";
-    import { pet } from "$lib/stores.js";
-    import VaccineDetailCard from "../../common/VaccineDetailCard.svelte";
+    import { pet, user } from "$lib/stores.js";
+
+    import VaccineDetailCard from "../VaccineDetailCard.svelte";
     import VaccineCard from "../../common/VaccineCard.svelte";
     import Dropdown from "../../common/Dropdown.svelte";
-
-    import profiles from "$lib/data/pets.json";
-    import appointments from "$lib/data/appointments.json";
 
     import { getAppointmentStatus, vaccineComparator } from "../../common/util";
 
     /** @type {import('./$types').PageData} */
     export let data;
-    $: status = getAppointmentStatus(data);
-
+    $: apts = [...$user.pets[$pet].appointments];
+    $: app = apts.filter((a) => (a.id == [data.id]))[0];
+    $: status = getAppointmentStatus(app, apts);
+    
     let view = "Upcoming";
-    $: viewableAppointmentList = appointments
+    $: viewableAppointmentList = apts
         .sort(vaccineComparator)
         .filter((apt, i) => {
             if (view == "Past") {
@@ -27,8 +27,8 @@
 </script>
 
 <section class="VaccinePage">
-    <Dropdown options={profiles} value={$pet} />
-    <VaccineDetailCard appointment={data} {status} />
+    <Dropdown options={$user.pets} value={$pet} />
+    <VaccineDetailCard appointment={app} {status} />
     <div class="HeadingLine">
         <p>{view + " appointments"}</p>
         <button
@@ -42,10 +42,10 @@
     </div>
     <section class="ViewList">
         {#each viewableAppointmentList as appointment, i}
-            {#if !(appointment.id == data.id)}
+            {#if !(appointment.id == app.id)}
                 <VaccineCard
                     {appointment}
-                    status={getAppointmentStatus(appointment)}
+                    status={getAppointmentStatus(appointment, apts)}
                 />
             {/if}
         {/each}
@@ -56,7 +56,11 @@
             goto("/vaccine/addVaccineSchedule");
         }}
     >
-        <img src="/addiconWhite.png" alt="Add Icon" class="FloatingButtonImg" />
+        <img
+            src="/add-icon-white.png"
+            alt="Add Icon"
+            class="FloatingButtonImg"
+        />
         <p>Add vaccine schedule</p>
     </button>
 </section>
