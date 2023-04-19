@@ -4,6 +4,7 @@ export const pet = writable(0);
 
 export const user = writable(
 	{
+		name: "Joseph",
 		email: "joebiden17@gmail.com",
 		phone: "9202035812",
 		pets: [
@@ -11,6 +12,7 @@ export const user = writable(
 				id: 0,
 				name: "Zarun",
 				species: "Cat",
+				weight: "100",
 				breed: "Persian Tabby",
 				dob: "1 Jan 2023",
 				bloodGroup: "A+",
@@ -105,6 +107,7 @@ export const user = writable(
 				id: 1,
 				name: "Rocky",
 				species: "Dog",
+				weight: "10",
 				breed: "German Shepherd",
 				dob: "13 Feb 2023",
 				bloodGroup: "B+",

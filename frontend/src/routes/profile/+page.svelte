@@ -1,29 +1,51 @@
 <script>
+	import{user} from '$lib/stores.js'
 	import {goto} from '$app/navigation'
-	export let data;
+	let data = $user;
+	let editing = false;
+	let userInfoClass = "user-info";
+	$: $user['email'] = data['email'];
+	$: $user['phone'] = data['phone'];
+
+	function toggleEdit() {
+		editing = !editing;
+		if (editing) {
+			userInfoClass = "user-info-editing";
+		}
+		else {
+			userInfoClass = "user-info";
+		}
+	}
 </script>
 
-<h1>Hello {data["name"]}</h1>
+<h1 class="user-name">Hello {data["name"]}</h1>
 <div class="profile-body">
 	<br/>
 	<div class="user-profile">
-		<div class="user-info">
-			<p>Email - {data["email"]}</p>
-			<p>Phone - {data["phone"]}</p>
+		<div class={userInfoClass}>
+			<span>Email - <input disabled={!editing} type=text bind:value={data["email"]}/></span>
+			<span>Phone - <input disabled={!editing} type=text bind:value={data["phone"]}/></span>
 		</div>
-		<button class="profile-edit-button">
-			<img src="/edit.svg" alt="edit icon"/>
-			Edit
-		</button>
+		{#if !editing}
+			<button on:click={toggleEdit} class="profile-edit-button">
+				<img src="/edit.svg" alt="edit icon"/>
+				Edit
+			</button>
+		{:else}
+			<button on:click={toggleEdit} class="profile-edit-confirm-button">
+				<img src="/done-black-empty.svg" alt="edit confirm icon"/>
+				Done
+			</button>
+		{/if}
 	</div>
 	<br/>
 
 	<h1>Manage Pets</h1>
 	<br/>
 	<div class="pet-list">
-		{#each data["petList"] as pet}
+		{#each data["pets"] as pet}
 			<button class="pet-card" on:click={() => goto("/profile/" + pet["name"])}>
-				<img src={pet['image']} class="pet-image" alt="photo of {pet['name']}"/>
+				<img src={pet['src']} class="pet-image" alt="photo of {pet['name']}"/>
 				{pet['name']}
 			</button>
 		{/each}
@@ -37,12 +59,12 @@
 
 	<h1>Lost pet requests</h1><br/>
 	<div class="lost-pet-list">
-		{#each data["lostPetList"] as pet}
+		{#each data["lostPetRequests"] as pet}
 			<div class="lost-pet-card">
-				<img src={pet['image']} class="lost-pet-image" alt="photo of {pet['name']}"/>
+				<img src={pet['imgSrc']} class="lost-pet-image" alt="photo of {pet['name']}"/>
 				<div>
 					<p class="lost-pet-name">Name - {pet['name']}</p>
-					<p>Last seen - {pet['last-seen']}</p>
+					<p>Last seen - {pet['lastSeen']}</p>
 						<br/>
 					<p class="lost-pet-contact">Contact - {pet['contact']}</p>
 				</div>
@@ -60,9 +82,15 @@
 	p {
 		font-family: var(--font-heading);
 	}
+	input {
+		background: none;
+	}
 
+	.user-name{
+		margin-bottom: 0.1rem;
+	}
 	.profile-body {
-		height: 80%;
+		height: 85%;
 		overflow-y: auto;
 		-ms-overflow-style: none;
 		scrollbar-width: none;
@@ -89,6 +117,19 @@
 		font-family: var(--font-heading);
 		font-size: var(--font-s);
 	}
+	.user-info-editing {
+		display: flex;
+		flex-grow: 2;
+		flex-direction: column;
+		gap: 0.5rem;
+		border-radius: var(--radius-large);
+		border-width: 1px;
+		border-color: var(--color-text-primary);
+		padding: 0.8rem;
+		font-family: var(--font-heading);
+		font-size: var(--font-s);
+		color: var(--color-text-secondary);
+	}
 	.profile-edit-button {
 		display: flex;
 		flex-direction: column;
@@ -100,6 +141,19 @@
 		padding: 1rem;
 		width: 20%;
 		background-color: var(--color-disabled);
+		font-family: var(--font-heading);
+	}
+	.profile-edit-confirm-button{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		align-items: center;
+		border-radius: var(--radius-large);
+		border-width: 1px;
+		border-color: var(--color-text-primary);
+		padding: 1rem;
+		width: 20%;
+		background-color: var(--color-enabled);
 		font-family: var(--font-heading);
 	}
 	.pet-list {

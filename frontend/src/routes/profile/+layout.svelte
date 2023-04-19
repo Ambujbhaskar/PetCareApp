@@ -31,7 +31,7 @@
 	div {
 		display: flex;
 		justify-content: space-between;
-		padding: 2.5rem 0 3rem;
+		padding: 2.5rem 0 1.8rem;
 		color: white;
 		font-size: var(--font-xl);
 	}
