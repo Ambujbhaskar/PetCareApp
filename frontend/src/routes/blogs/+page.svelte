@@ -1,7 +1,7 @@
 <script>
-  import SuggestedArticles from "../common/SuggestedArticles.svelte";
   import Article from "../common/Article.svelte";
   import articles from "$lib/data/articles.json";
+  import { user } from "$lib/stores.js";
 
   let searchTerm = "";
   let selectedProfile = 0;
@@ -9,19 +9,34 @@
   let bookMarked = false;
   let search;
   let tabs = [
-    { name: "CATS", active: false },
-    { name: "NUTRITION", active: true },
+    { name: "CATS", active: true },
+    { name: "NUTRITION", active: false },
     { name: "DOGS", active: false },
     { name: "VETS", active: false },
     { name: "VACCINATION", active: false },
   ];
   let allArticles = articles;
+  let userSavedData = $user.savedArticles;
 
   function searchArticles() {
+    let Index = tabs.findIndex((tab) => tab.active);
     allArticles = articles.filter((article) => {
+      if (bookMarked) {
+        return (
+          userSavedData.includes(parseInt(article["id"])) &&
+          (article["title"].toUpperCase().includes(searchTerm.toUpperCase()) ||
+            article["content"]
+              .toUpperCase()
+              .includes(searchTerm.toUpperCase())) &&
+          article["tag"].toUpperCase() === tabs[Index].name
+        );
+      }
       return (
-        article["Title"].toUpperCase().includes(searchTerm.toUpperCase()) ||
-        article["Body"].toUpperCase().includes(searchTerm.toUpperCase())
+        (article["title"].toUpperCase().includes(searchTerm.toUpperCase()) ||
+          article["content"]
+            .toUpperCase()
+            .includes(searchTerm.toUpperCase())) &&
+        article["tag"].toUpperCase() === tabs[Index].name
       );
     });
   }
@@ -29,30 +44,28 @@
   function setActiveTab(index) {
     tabs = tabs.map((tab, i) => ({ ...tab, active: i === index }));
     allArticles = articles.filter((article) => {
-      console.log(article);
       if (bookMarked) {
         return (
-          article["Saved"] === bookMarked &&
-          article["Type"].toUpperCase() === tabs[index].name
+          userSavedData.includes(parseInt(article["id"])) &&
+          article["tag"].toUpperCase() === tabs[index].name
         );
       }
-
-      return article["Type"].toUpperCase() === tabs[index].name;
+      return article["tag"].toUpperCase() === tabs[index].name;
     });
-    console.log(allArticles);
   }
 
   function bookmark_articles() {
     let Index = tabs.findIndex((tab) => tab.active);
+
     allArticles = articles.filter((article) => {
       if (bookMarked) {
         return (
-          article["Saved"] === bookMarked &&
-          article["Type"].toUpperCase() === tabs[Index].name
+          userSavedData.includes(parseInt(article["id"])) &&
+          article["tag"].toUpperCase() === tabs[Index].name
         );
       }
 
-      return article["Type"].toUpperCase() === tabs[Index].name;
+      return article["tag"].toUpperCase() === tabs[Index].name;
     });
   }
 
@@ -144,7 +157,7 @@
         </div>
       {:else}
         <div
-          class="flex flex-auto items-center border-black border-2 w-full rounded-[1rem] h-[2rem] px-5
+          class="flex flex-auto items-center justify-center border-black border-2 w-full rounded-[1rem] h-[2rem] px-5 py-4
           transition duration-2000 ease-in-out"
         >
           <img src="./search_icon.svg" alt="Search" class="mr-4" />
@@ -178,17 +191,24 @@
       {/each}
     </div>
     <div class="SuggestedArticlesContainer">
-      {#each allArticles as { id, Type, Title, Body, Imgsrc, Saved }, i}
-        <a href={`/blogs/${id}`} data-sveltekit-noscroll>
-          <Article
-            type={Type}
-            title={Title}
-            body={Body}
-            src={Imgsrc}
-            saved={Saved}
-          />
-        </a>
-      {/each}
+      {#if allArticles.length == 0}
+        <div class="flex justify-center items-center mt-[9rem]">
+          <img src="./empty_articles.png" alt="No Articles" />
+        </div>
+      {:else}
+        {#each allArticles as { id, tag, title, content, image }, i}
+          <a href={`/blogs/${id}`} data-sveltekit-noscroll>
+            <Article
+              {id}
+              type={tag}
+              {title}
+              body={content}
+              src={image}
+              saved={$user.savedArticles.filter((a) => a == id).length != 0}
+            />
+          </a>
+        {/each}
+      {/if}
     </div>
   </div>
 </section>

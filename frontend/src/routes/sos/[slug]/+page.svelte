@@ -27,7 +27,6 @@
         </h1>
       </div>
       <div>Last Seen - {pets.lastSeen}</div>
-      <div>Contact - {pets.contact}</div>
       <div>Date Missing - {pets.dateTimeMissing}</div>
       <div>Notes - {pets.notes}</div>
     </div>
@@ -40,8 +39,8 @@
     </div>
 
     <button
-      class="w-full border-2 border-black rounded-[1.4rem] py-2 bg-[var(--color-enabled)] mt-5 hover:scale-98 active:scale-95 transition-all duration-200"
-      >Call
+      class="w-full border-2 border-black rounded-[1.4rem] py-2 bg-[var(--color-enabled)] mt-5 hover:scale-98 active:scale-95 transition-all duration-200 flex justify-center items-center"
+      ><img src="/call.svg" alt="svg" class="mr-2" />Call {pets.contact}
     </button>
   {:else}
     <Form />
