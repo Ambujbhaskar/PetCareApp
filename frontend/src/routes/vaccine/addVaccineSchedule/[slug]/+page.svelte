@@ -8,11 +8,11 @@
     export let data;
 
     let pets = [...$user.pets];
-    $: data = {...$user.pets[$pet].appointments.filter(
-        (apt) => apt.id == data.id
-    )[0]};
+    $: data = {
+        ...$user.pets[$pet].appointments.filter((apt) => apt.id == data.id)[0],
+    };
     $: date = new Date(data.dateTime);
-    $: console.log(data, date);
+    // $: console.log(data, date);
     $: day = date.toLocaleDateString([], { day: "numeric" });
     $: month = date.toLocaleDateString([], { month: "long" });
     $: time = date.toLocaleTimeString([], {
@@ -30,14 +30,14 @@
         },
         time: time,
         vaccine: "",
-        vaccines: (data.vaccines == undefined)?[]:[...data.vaccines],
-        location: {...data.location},
+        vaccines: data.vaccines == undefined ? [] : [...data.vaccines],
+        location: { ...data.location },
     };
-    $: formData = {...template};
-    $: {
-        console.log(template, template.vaccines);
-        console.log(formData);
-    }
+    $: formData = { ...template };
+    // $: {
+    //     console.log(template, template.vaccines);
+    //     console.log(formData);
+    // }
     // $: console.log("data", formData);
 </script>
 
@@ -153,15 +153,26 @@
             let temp = { ...formData };
 
             temp.dateTime = new Date(
-                temp.date.day + " " + temp.date.month + " " + temp.date.year + " " + temp.time
+                temp.date.day +
+                    " " +
+                    temp.date.month +
+                    " " +
+                    temp.date.year +
+                    " " +
+                    temp.time
             ).toLocaleString();
             delete temp.vaccine;
             delete temp.date;
+            delete temp.time;
             temp.completed = false;
+            temp.id = data.id;
 
             console.log("Editing appointment in db:", temp);
 
-            $user.pets[$pet].appointments.filter((apt) => (apt.id == data.id))[0] = temp;
+            $user.pets[$pet].appointments[data.id] = temp;
+
+            console.log("USR:", $user);
+
             goto("/vaccine");
         }}
     >

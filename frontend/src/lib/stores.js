@@ -112,7 +112,7 @@ export const user = writable(
 				src: "/dog.png",
 				appointments: [
 					{
-						id: 1,
+						id: 0,
 						dateTime: "17 March 2023 5:00 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Manas",
@@ -125,7 +125,7 @@ export const user = writable(
 						}
 					},
 					{
-						id: 2,
+						id: 1,
 						dateTime: "31 Jan 2023 4:20 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
@@ -136,7 +136,7 @@ export const user = writable(
 						}
 					},
 					{
-						id: 3,
+						id: 2,
 						dateTime: "6 Jul 2023 9:00 AM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
@@ -147,7 +147,7 @@ export const user = writable(
 						}
 					},
 					{
-						id: 4,
+						id: 3,
 						dateTime: "2 Jun 2023 5:00 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
