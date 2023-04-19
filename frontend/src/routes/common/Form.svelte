@@ -1,21 +1,22 @@
 <script>
   import Input from "./Input.svelte";
+  import { lostPetRequests } from "$lib/stores.js";
+  import { onMount } from "svelte";
+  import { v4 as uuidv4 } from "uuid";
 
   let avatar = "",
     fileinput;
   let name = "";
   let lastSeen = "";
-  let dateMissing = "";
   let day = "";
   let month = "";
   let year = "";
   let notes = "";
   let reward = "";
-
-  let nameError, lastSeenError, dateMissingError, rewardError;
+  $: submit = 0;
   let errors = {};
   let touchedFields = {};
-  let valid = [0, 0, 0, 0, 0, 0];
+  $: valid = [0, 0, 0, 0, 0, 0];
 
   const onFileSelected = (e) => {
     let image = e.target.files[0];
@@ -39,13 +40,15 @@
   $: errors = validate(touchedFields, result);
 
   function scrollIntoView({ target }) {
-    const el = document.querySelector("#name");
+    const el = document.querySelector(target);
 
     if (!el) return;
     el.scrollIntoView({
       behavior: "smooth",
     });
   }
+
+  $: randomNumber = getRandomNumber();
 
   // validation of date
   function isValidDate(dateString) {
@@ -72,7 +75,6 @@
     // Check if date is greater than current date
     const currentDate = new Date();
     if (dateObj.getTime() > currentDate.getTime()) {
-      // Invalid date
       return "The date cannot be greater than the current date.";
     }
 
@@ -82,75 +84,114 @@
 
   const validate = () => {
     const errors = {};
-    console.log(touchedFields.reward, reward, isNaN(reward));
-    if (touchedFields.name) {
-      if (name === "") {
-        valid[0] = 0;
-        scrollIntoView({ target: "#name" });
-        errors.name = "Name is required";
-      } else if (/\d/.test(name)) {
-        valid[0] = 0;
-        scrollIntoView({ target: "#name" });
-        errors.name = "Name shouldn't have integer: Eg 'Tommy', not 'Tommy 2'";
-      } else {
-        valid[0] = 1;
+
+    if (!submit) {
+      if (touchedFields.name) {
+        if (name === "") {
+          valid[0] = 0;
+          onMount(() => {
+            scrollIntoView({ target: "#name" });
+          });
+          errors.name = "Name is required";
+        } else if (/\d/.test(name)) {
+          valid[0] = 0;
+          scrollIntoView({ target: "#name" });
+          errors.name =
+            "Name shouldn't have integer: Eg 'Tommy', not 'Tommy 2'";
+        } else {
+          valid[0] = 1;
+        }
       }
-    }
-    if (touchedFields.lastSeen) {
-      if (lastSeen === "") {
-        valid[1] = 0;
-        scrollIntoView({ target: "#last-seen" });
-        errors.lastSeen = "last-seen your pet field is required";
-      } else {
-        valid[1] = 1;
+      if (touchedFields.lastSeen) {
+        if (lastSeen === "") {
+          valid[1] = 0;
+          onMount(() => {
+            scrollIntoView({ target: "#last-seen" });
+          });
+          errors.lastSeen = "last-seen your pet field is required";
+        } else {
+          valid[1] = 1;
+        }
       }
-    }
-    if (touchedFields.day && touchedFields.month && touchedFields.year) {
-      if (day === "" || month === "" || year === "") {
-        valid[2] = 0;
-        scrollIntoView({ target: "#date" });
-        errors.date = "Please let us know from what date, your pet is missing.";
+      if (touchedFields.day && touchedFields.month && touchedFields.year) {
+        if (day === "" || month === "" || year === "") {
+          valid[2] = 0;
+          onMount(() => {
+            scrollIntoView({ target: "#date" });
+          });
+          errors.date =
+            "Please let us know from what date, your pet is missing.";
+        }
+        if (isNaN(day) || isNaN(month) || isNaN(year)) {
+          valid[2] = 0;
+          onMount(() => {
+            scrollIntoView({ target: "#date" });
+          });
+          errors.date = "Please enter valid date - Must be a number.";
+        }
+        if (isValidDate(month + "/" + day + "/" + year) !== "") {
+          valid[2] = 0;
+          onMount(() => {
+            scrollIntoView({ target: "#date" });
+          });
+          errors.date = isValidDate(month + "/" + day + "/" + year);
+        } else {
+          valid[2] = 1;
+        }
       }
-      if (isNaN(day) || isNaN(month) || isNaN(year)) {
-        valid[2] = 0;
-        scrollIntoView({ target: "#date" });
-        errors.date = "Please enter valid date - Must be a number.";
+      if (touchedFields.reward) {
+        if (reward === "") {
+          valid[3] = 0;
+          onMount(() => {
+            scrollIntoView({ target: "#reward" });
+          });
+          errors.reward = "reward field is required";
+        }
+        if (isNaN(reward)) {
+          valid[3] = 0;
+          onMount(() => {
+            scrollIntoView({ target: "#reward" });
+          });
+          errors.reward = "reward must be a number!!";
+        } else {
+          valid[3] = 1;
+        }
       }
-      if (isValidDate(month + "/" + day + "/" + year) !== "") {
-        valid[2] = 0;
-        scrollIntoView({ target: "#date" });
-        errors.date = isValidDate(month + "/" + day + "/" + year);
-      } else {
-        valid[2] = 1;
-      }
-    }
-    if (touchedFields.reward) {
-      console.log(reward);
-      if (reward === "") {
-        valid[3] = 0;
-        scrollIntoView({ target: "#reward" });
-        errors.reward = "reward field is required";
-      }
-      if (isNaN(reward)) {
-        valid[3] = 0;
-        scrollIntoView({ target: "#reward" });
-        errors.reward = "reward must be a number!!";
-      } else {
-        valid[3] = 1;
-      }
-    }
-    if (touchedFields.image) {
+
       if (avatar === "") {
         valid[4] = 0;
-        scrollIntoView({ target: "#image" });
+        // onMount(() => {
+        //   scrollIntoView({ target: "#image" });
+        // });
         errors.image = "Please upload your pet image!";
       } else {
         valid[4] = 1;
+      }
+    } else {
+      if (
+        touchedFields.name ||
+        touchedFields.lastSeen ||
+        touchedFields.day ||
+        touchedFields.month ||
+        touchedFields.year ||
+        touchedFields.reward ||
+        touchedFields.image
+      ) {
+        submit = 0;
+        valid[0] = valid[1] = valid[2] = valid[3] = valid[4] = valid[5] = 0;
       }
     }
 
     return errors;
   };
+
+  function getRandomNumber() {
+    let number = "";
+    for (let i = 0; i < 10; i++) {
+      number += Math.floor(Math.random() * 10);
+    }
+    return Number(number);
+  }
 
   const validateAndSubmit = (e) => {
     touchedFields = {
@@ -163,9 +204,27 @@
       image: true,
     };
     if (!Object.keys(errors).length) {
-      console.log(result);
+      lostPetRequests.update((data) => {
+        return [
+          ...data,
+          {
+            id: uuidv4(),
+            name: result.name,
+            imgSrc: result.image,
+            lastSeen: result.lastSeen,
+            dateTimeMissing: result.dateMissing,
+            notes: result.notes,
+            reward: result.reward,
+            contact: randomNumber,
+          },
+        ];
+      });
+      touchedFields = {};
+      valid[0] = valid[1] = valid[2] = valid[3] = valid[4] = valid[5] = 0;
+      submit = 1;
+      avatar = "";
+
       e.target.reset();
-      valid = [0, 0, 0, 0, 0, 0];
     }
   };
 </script>
@@ -177,8 +236,8 @@
     on:submit|preventDefault={(e) => validateAndSubmit(e)}
   >
     <div class="flex justify-between items-center w-full">
-      <span id="name" class="text-[1.2rem]">Name</span>
-      {#if valid[0]}<img
+      <span id="name" class="text-[1.2rem]">Name*</span>
+      {#if valid[0] && !submit}<img
           src="/valid.svg"
           alt="valid"
           class="w-[1.2rem] h-[1.2rem]"
@@ -196,8 +255,8 @@
 
     <!-- svelte-ignore a11y-label-has-associated-control -->
     <div class="flex justify-between items-center w-full">
-      <span id="last-seen" class="text-[1.2rem]">Last seen</span>
-      {#if valid[1]}<img
+      <span id="last-seen" class="text-[1.2rem]">Last seen*</span>
+      {#if valid[1] && !submit}<img
           src="/valid.svg"
           alt="valid"
           class="w-[1.2rem] h-[1.2rem]"
@@ -215,8 +274,9 @@
     />
 
     <div class="flex justify-between items-center w-full">
-      <label id="date" class="text-[1.2rem]">Date missing</label>
-      {#if valid[2]}<img
+      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <label id="date" class="text-[1.2rem]">Date missing*</label>
+      {#if valid[2] && !submit}<img
           src="/valid.svg"
           alt="valid"
           class="w-[1.2rem] h-[1.2rem]"
@@ -250,6 +310,7 @@
       <span class="text-red-500">* {errors.date}</span>
     {/if}
 
+    <!-- svelte-ignore a11y-label-has-associated-control -->
     <label class="text-[1.2rem]">Notes</label>
     <textarea
       placeholder="Information that could help recognize your PET!!"
@@ -258,8 +319,9 @@
     />
 
     <div class="flex justify-between items-center w-full">
-      <label id="reward" class="text-[1.2rem]">Reward</label>
-      {#if valid[3]}<img
+      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <label id="reward" class="text-[1.2rem]">Reward*</label>
+      {#if valid[3] && !submit}<img
           src="/valid.svg"
           alt="valid"
           class="w-[1.2rem] h-[1.2rem]"
@@ -279,8 +341,9 @@
     {/if}
 
     <div class="flex justify-between items-center w-full">
-      <label id="image" class="text-[1.2rem]">Upload pictures</label>
-      {#if valid[4]}<img
+      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <label id="image" class="text-[1.2rem]">Upload pictures*</label>
+      {#if valid[4] && !submit}<img
           src="/valid.svg"
           alt="valid"
           class="w-[1.2rem] h-[1.2rem]"

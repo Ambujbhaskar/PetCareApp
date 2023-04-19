@@ -1,17 +1,18 @@
 <script>
+  import { lostPetRequests } from "$lib/stores.js";
+  import LeafletMap from "../common/LeafletMap.svelte";
   let viewAll = false;
-
+  let listHeight = "100%";
+  $: {
+    if (viewAll) listHeight = "fit-content";
+    else listHeight = "30rem";
+  }
   export let data;
 </script>
 
-<section class="ml-1 flex flex-col transition-all duration-200">
+<section class="ml-1 flex flex-col transition-all duration-200 overflow-hidden">
   {#if !viewAll}
-    <h2 class="mb-5">Nearby vet clinics</h2>
-    <img
-      src="/map.png"
-      alt="Map"
-      class="border-[0.12rem] border-black rounded-[1.2rem]"
-    />
+    <LeafletMap />
   {/if}
   <div class="flex justify-between items-center mt-5">
     <h2>Lost pets</h2>
@@ -31,50 +32,22 @@
 
   <!-- lost dogs -->
 
-  <div
-    class="flex flex-col gap-5 justify-between items-center mt-5 transition-all duration-200 delay-500"
-  >
-    {#each data.lostPets as pets, i}
-      <a href={`/sos/${pets.id}`} data-sveltekit-noscroll class="w-full">
-        {#if i <= 2 && !viewAll}
-          <div
-            class="border-[0.12rem] rounded-[1.2rem] border-neutral-400 flex justify-center pl-3 items-center w-full py-4"
-          >
-            <img
-              src={pets.imgSrc}
-              alt="dog"
-              class="w-[7rem] h-[6rem] border-[0.125rem] rounded-[1.2rem] border-neutral-700"
-            />
-
-            <div
-              class="flex flex-col justify-evenly items-center ml-[2rem] mr-[1rem] p-2"
-            >
-              <div class="font-bold text-[1.3rem]">Name - {pets.name}</div>
-              <div class="">Last seen - {pets.location}</div>
-              <div>Contact - {pets.contact}</div>
-            </div>
+  <div class="lost-pet-list" style="height: {listHeight};">
+    {#each $lostPetRequests as pet, i}
+      <a href={`/sos/${pet.id}`} data-sveltekit-noscroll class="w-full">
+        <div class="lost-pet-card">
+          <img
+            src={pet["imgSrc"]}
+            class="lost-pet-image"
+            alt="photo of {pet['name']}"
+          />
+          <div>
+            <p class="lost-pet-name">Name - {pet["name"]}</p>
+            <p>Last seen - {pet["lastSeen"]}</p>
+            <br />
+            <p class="lost-pet-contact">Contact - {pet["contact"]}</p>
           </div>
-        {/if}
-
-        {#if viewAll}
-          <div
-            class="border-[0.12rem] rounded-[1.2rem] border-neutral-400 flex justify-center pl-3 items-center w-full py-4"
-          >
-            <img
-              src={pets.imgSrc}
-              alt="dog"
-              class="w-[7rem] h-[6rem] border-[0.125rem] rounded-[1.2rem] border-neutral-700"
-            />
-
-            <div
-              class="flex flex-col justify-evenly items-center ml-[2rem] mr-[1rem] p-2"
-            >
-              <div class="font-bold text-[1.3rem]">Name - {pets.name}</div>
-              <div class="">Last seen - {pets.location}</div>
-              <div>Contact - {pets.contact}</div>
-            </div>
-          </div>
-        {/if}
+        </div>
       </a>
     {/each}
   </div>
@@ -88,3 +61,41 @@
     </div>
   </a>
 </section>
+
+<style>
+  .lost-pet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: auto;
+  }
+  .lost-pet-card {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: var(--radius-large);
+    border-width: 1px;
+    border-color: var(--color-text-primary);
+  }
+  .lost-pet-image {
+    border-radius: var(--radius-small);
+    border-width: 1px;
+    border-color: var(--color-text-primary);
+    width: 6rem;
+    height: 6rem;
+    object-fit: cover;
+  }
+  .lost-pet-name {
+    font-family: var(--font-heading);
+    font-weight: bold;
+    font-size: var(--font-l);
+    color: var(--color-text-primary);
+  }
+  .lost-pet-contact {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--font-s);
+    color: var(--color-text-primary);
+  }
+</style>
