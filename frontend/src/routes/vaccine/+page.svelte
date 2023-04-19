@@ -1,20 +1,22 @@
 <script>
-    import { goto } from '$app/navigation';
-    import appointments from "$lib/data/appointments.json";
+    import { user, pet } from "$lib/stores";
+    import { goto } from "$app/navigation";
+
+    import { getAppointmentStatus } from "../common/util.js";
     
-	import { getAppointmentStatus } from "../common/util.js";
-
-	let nextAppointment = appointments.reduce((acc, curr) => {
-		const status = getAppointmentStatus(curr);
-		if (status == "Next") {
-			acc = curr;
-		}
-		return acc;
-	}, null);
-
-    if (nextAppointment != null) {
-        goto(`/vaccine/${nextAppointment.id}`);
-    }
+    $: apts = $user.pets[$pet].appointments;
+    $: nextAppointment = apts.reduce((acc, curr) => {
+        const status = getAppointmentStatus(curr, apts);
+        if (status == "Next") {
+            acc = curr;
+        }
+        return acc;
+    }, null);
+    $: {
+        if (nextAppointment != null) {
+            goto(`/vaccine/${nextAppointment.id}`);
+        }
+    } 
 </script>
 
 <div>

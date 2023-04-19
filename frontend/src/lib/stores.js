@@ -20,11 +20,10 @@ export const user = writable(
 				src: "/zarun.png",
 				appointments: [
 					{
-						id: 1,
+						id: 0,
 						dateTime: "17 March 2023 5:00 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
-						vaccines: ["FHV-1, FeLV"],
 						completed: true,
 						location: {
 								lat: "28.5535",
@@ -32,7 +31,7 @@ export const user = writable(
 						}
 					},
 					{
-						id: 2,
+						id: 1,
 						dateTime: "31 Jan 2023 4:20 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
@@ -43,11 +42,10 @@ export const user = writable(
 						}
 					},
 					{
-						id: 3,
+						id: 2,
 						dateTime: "6 Jul 2023 9:00 AM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
-						vaccines: ["FHV-1, FeLV"],
 						completed: false,
 						location: {
 								lat: "28.5535",
@@ -55,7 +53,7 @@ export const user = writable(
 						}
 					},
 					{
-						id: 4,
+						id: 3,
 						dateTime: "2 Jun 2023 5:00 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
@@ -66,11 +64,23 @@ export const user = writable(
 						}
 					},
 					{
-						id: 5,
+						id: 4,
 						dateTime: "22 May 2023 5:00 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
-						vaccines: ["FHV-1, FeLV"],
+						vaccines: ["FHV-1", "FeLV"],
+						doseNo: 1,
+						completed: false,
+						location: {
+								lat: "28.5535",
+								lng: "77.2661"
+						}
+					},
+					{
+						id: 5,
+						dateTime: "12 February 2023 6:00 PM",
+						clinic: "Friendicoes",
+						doctor: "Dr. Padam",
 						completed: false,
 						location: {
 								lat: "28.5535",
@@ -79,22 +89,9 @@ export const user = writable(
 					},
 					{
 						id: 6,
-						dateTime: "12 February 2023 6:00 PM",
-						clinic: "Friendicoes",
-						doctor: "Dr. Padam",
-						vaccines: ["FHV-1, FeLV"],
-						completed: false,
-						location: {
-								lat: "28.5535",
-								lng: "77.2661"
-						}
-					},
-					{
-						id: 7,
 						dateTime: "9 April 2023 12:30 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
-						vaccines: ["FHV-1, FeLV"],
 						completed: false,
 						location: {
 								lat: "28.5535",
@@ -119,7 +116,8 @@ export const user = writable(
 						dateTime: "17 March 2023 5:00 PM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Manas",
-						vaccines: ["FHV-1, FeLV"],
+						vaccines: ["FHV-1", "FeLV"],
+						doseNo: 2,
 						completed: true,
 						location: {
 								lat: "28.5535",
@@ -142,7 +140,6 @@ export const user = writable(
 						dateTime: "6 Jul 2023 9:00 AM",
 						clinic: "Friendicoes",
 						doctor: "Dr. Padam",
-						vaccines: ["FHV-1, FeLV"],
 						completed: false,
 						location: {
 								lat: "28.5535",

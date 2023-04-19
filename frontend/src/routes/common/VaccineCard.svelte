@@ -3,16 +3,18 @@
     export let status;
     $: id = appointment.id;
     $: appointmentDate = new Date(appointment.dateTime);
-    $: day = appointmentDate.toLocaleDateString([], {day: "numeric"});
-    $: month = appointmentDate.toLocaleDateString([], {month: "long"});
-    $: time = appointmentDate.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
+    $: day = appointmentDate.toLocaleDateString([], { day: "numeric" });
+    $: month = appointmentDate.toLocaleDateString([], { month: "long" });
+    $: time = appointmentDate.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+    });
     $: clinic = appointment.clinic;
     $: doctor = appointment.doctor;
-    
 </script>
 
 <a href={`/vaccine/${id}`} class={"VaccineCard"}>
-    <span class={"Date " + status}>
+    <span class={"Date " + (appointment.completed ? "Completed" : status)}>
         <h1>{day}</h1>
         <h4>{month.toUpperCase()}</h4>
     </span>
@@ -20,7 +22,9 @@
         <h4>{clinic}</h4>
         <p>{doctor}</p>
         <div>
-            <h4 class={status+"Text"}>{status}</h4>
+            <h4 class={(appointment.completed ? "Completed" : status) + "Text"}>
+                {appointment.completed ? "Completed" : status}
+            </h4>
             <p>{time}</p>
         </div>
     </span>

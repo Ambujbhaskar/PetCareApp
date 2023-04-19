@@ -44,7 +44,7 @@
             {/each}        
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class={state?"Default NoPadding":"Default IdleColor NoPadding"} on:click={addPet}>
-                <img src={"/AddWithCircle.png"} alt={"add symbol"} class="RoundImg" />
+                <img src={"/add-with-circle.png"} alt={"add symbol"} class="RoundImg" />
                 <p>Add pet</p>
             </div>
         </div>

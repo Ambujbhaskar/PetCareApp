@@ -1,24 +1,25 @@
 <script>
-    import {pet} from "$lib/stores.js";
-    // components
+	import { user } from "$lib/stores.js";
+	import { pet } from "$lib/stores.js";
+	import { goto } from "$app/navigation";
+	// components
 	import Dropdown from "./common/Dropdown.svelte";
 	import VaccineCard from "./common/VaccineCard.svelte";
 	import SuggestedArticles from "./common/SuggestedArticles.svelte";
 
-    // data
-    import profiles from "$lib/data/pets.json";
-	import appointments from "$lib/data/appointments.json";
-
 	// function
 	import { getAppointmentStatus } from "./common/util.js";
 
-	let nextAppointment = appointments.reduce((acc, curr) => {
-		const status = getAppointmentStatus(curr);
+	$: apts = $user.pets[$pet].appointments;
+	$: nextAppointment = apts.reduce((acc, curr) => {
+		const status = getAppointmentStatus(curr, apts);
+		// console.log("S", status);
 		if (status == "Next") {
 			acc = curr;
 		}
 		return acc;
 	}, null);
+	// $: console.log(nextAppointment);
 </script>
 
 <svelte:head>
@@ -27,25 +28,27 @@
 </svelte:head>
 
 <section>
-	<Dropdown options={profiles} value={$pet} />
+	<Dropdown options={$user.pets} value={$pet} />
 	<div class="Appointment">
 		<h4>Next Vaccine Appointment</h4>
 		{#if nextAppointment != null}
-			<VaccineCard  
-				appointment={nextAppointment}
-				status={"Next"} 
-			/>
+			<VaccineCard appointment={nextAppointment} status={"Next"} />
 		{:else}
-			<div class="ImageContainer">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<div
+				class="ImageContainer"
+				on:click={() => {
+					goto("/vaccine/addVaccineSchedule");
+				}}
+			>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img src={"/empty-home-vaccine.svg"} />
 			</div>
 		{/if}
-
 	</div>
 	<div class="Articles">
 		<h4>Suggested Articles</h4>
-		<SuggestedArticles/>
+		<SuggestedArticles />
 	</div>
 </section>
 

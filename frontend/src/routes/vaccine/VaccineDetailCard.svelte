@@ -1,18 +1,26 @@
 <script>
+    import { user, pet } from "$lib/stores";
+    import { goto } from "$app/navigation";
+
+    import availableVaccines from "$lib/data/vaccine";
+
     export let appointment;
     $: id = appointment.id;
     $: appointmentDate = new Date(appointment.dateTime);
-    $: day = appointmentDate.toLocaleDateString([], {day: "numeric"});
-    $: month = appointmentDate.toLocaleDateString([], {month: "long"});
-    $: time = appointmentDate.toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
+    $: day = appointmentDate.toLocaleDateString([], { day: "numeric" });
+    $: month = appointmentDate.toLocaleDateString([], { month: "long" });
+    $: time = appointmentDate.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+    });
     $: clinic = appointment.clinic;
     $: doctor = appointment.doctor;
-    $: vaccine = appointment.vaccine;
+    $: vaccines = appointment.vaccines;
     export let status;
 </script>
 
 <div class="VaccineDetailCard">
-    <span class={"Date " + status}>
+    <span class={"Date " + (appointment.completed ? "Completed" : status)}>
         <h1>{day}</h1>
         <h4>{month.toUpperCase()}</h4>
     </span>
@@ -22,26 +30,81 @@
             <p>{time}</p>
         </div>
         <p>{doctor}</p>
-        {#if vaccine != undefined}
-            <h4>{vaccine}</h4>
+        {#if vaccines != undefined}
+            <h4>{vaccines.join(", ")}</h4>
         {/if}
-        <h5 class={status + "Text"}>{status + " Appointment"}</h5>
+        <h5
+            class={(status != "Next"
+                ? status
+                : appointment.completed
+                ? "Completed"
+                : "Next") + "Text"}
+        >
+            {(appointment.completed ? "Completed" : status) + " Appointment"}
+        </h5>
         <div>
             <button class="MapButton">
                 <!-- svelte-ignore a11y-missing-attribute -->
                 <img src={"/direction-icon.svg"} />
                 <h4>Open in Maps</h4>
             </button>
-            <button class="EditButton">
+            <button
+                class="EditButton"
+                on:click={() => goto(`/vaccine/addVaccineSchedule/${id}`)}
+            >
                 <!-- svelte-ignore a11y-missing-attribute -->
                 <img src={"/edit-icon-green.svg"} />
             </button>
         </div>
-        <button class={"DoneButton " + (appointment.completed?"Disabled":"")} on:click={() => {}}>
-            <!-- svelte-ignore a11y-missing-attribute -->
-            <img src={"/tick-icon-yellow.svg"} />
-            <h4>{appointment.completed?"Completed":"Mark as done"}</h4>
-        </button>
+        {#if !appointment.completed}
+            <button
+                class={"DoneButton"}
+                on:click={() => {
+                    $user.pets[$pet].appointments.filter(
+                        (apt) => apt.id == id
+                    )[0].completed = true;
+                    console.log("Store:", $user);
+                    status = "Completed";
+
+                    if (vaccines.length != 0) {
+                        console.log("VAX:", vaccines);
+                        console.log("AV VAX1:", availableVaccines);
+                        vaccines.forEach((vax) => {
+                            let v = availableVaccines.filter(
+                                (vac) => vac.name == vax
+                            )[0];
+                            if (
+                                v != undefined &&
+                                v.maxDoses > appointment.doseNo
+                            ) {
+                                // create new appointment
+
+                                console.log("AV VAX2:", availableVaccines);
+                                let apts = $user.pets[$pet].appointments;
+                                let newDate = new Date(appointmentDate);
+                                newDate.setDate(newDate.getDate() + v.gap);
+                                apts.push({
+                                    id: apts.length,
+                                    dateTime: newDate.toLocaleString(),
+                                    clinic: clinic,
+                                    doctor: doctor,
+                                    vaccines: [vax],
+                                    doseNo: appointment.doseNo + 1,
+                                    completed: false,
+                                    location: { ...appointment.location },
+                                });
+                            }
+                        });
+                    }
+                    console.log("Store:", $user);
+                }}
+            >
+                <!-- svelte-ignore a11y-missing-attribute -->
+                <img src={"/tick-icon-yellow.svg"} />
+
+                <h4>{"Mark as done"}</h4>
+            </button>
+        {/if}
     </span>
 </div>
 
@@ -148,21 +211,21 @@
         border: solid 1px #000000;
         border-radius: 1.1rem;
         height: 2.2rem;
-        margin-bottom: .75rem;
-        margin-top: .75rem;
+        margin-bottom: 0.75rem;
+        margin-top: 0.75rem;
     }
     .MapButton {
         width: 45%;
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: .5rem;
+        gap: 0.5rem;
     }
     .DoneButton {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: .5rem;
+        gap: 0.5rem;
     }
     .EditButton {
         padding: 0.2rem;

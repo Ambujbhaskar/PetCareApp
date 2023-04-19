@@ -1,29 +1,34 @@
 <script>
     import { pet } from "$lib/stores.js";
-
+    import { user } from "$lib/stores.js";
     import { goto } from "$app/navigation";
 
     import Dropdown from "/src/routes/common/Dropdown.svelte";
+    let pets = [...$user.pets];
 
-    import profiles from "$lib/data/pets.json";
-
-    let formData = { 
+    const template = {
         clinic: "",
         doctor: "",
         date: {
             month: "",
         },
-        vaccine: "", 
+        time: "",
+        vaccine: "",
         vaccines: [],
+        location: {
+            lat: "",
+            lng: "",
+        },
     };
-    $: console.log("data", formData);
+    let formData = template;
+    // $: console.log("data", formData);
 </script>
 
 <div class="AddVaccines">
-    <Dropdown options={profiles} value={$pet} />
+    <Dropdown options={pets} value={$pet} />
     <div class="Illustration">
         <h4>Add Vaccination Schedule</h4>
-        <img src="/AddVaxScheduleGreen.png" alt="Add vaccine schedule" />
+        <img src="/add-vax-schedule-green.png" alt="Add vaccine schedule" />
     </div>
     <h4>Clinic *</h4>
     <input
@@ -81,6 +86,17 @@
             }}
         />
     </div>
+    <h4>Time</h4>
+    <input
+        type="text"
+        placeholder="ENTER THE APPOINTMENT TIME"
+        value={formData.time}
+        on:change={(e) => {
+            let temp = { ...formData };
+            temp.time = e.target.value;
+            formData = temp;
+        }}
+    />
     <h4>Vaccines</h4>
     <input
         type="text"
@@ -92,21 +108,44 @@
             formData = temp;
         }}
     />
+    <div>
+        {#each formData.vaccines as vax}
+            <p>{vax}</p>
+        {/each}
+    </div>
     <button
         class="AddVaccineButton"
         on:click={(e) => {
+            if (formData.vaccine == "") return;
             let temp = { ...formData };
             temp.vaccines = [...temp.vaccines, temp.vaccine];
             temp.vaccine = "";
             formData = temp;
         }}
     >
-        <img src="/addicon.png" alt="add icon" />
+        <img src="/add-icon.png" alt="add icon" />
         <p>Add</p>
     </button>
     <button
         class={"DoneButton"}
         on:click={() => {
+            if (formData == template) return;
+            if (formData.vaccines.length == 0) {
+                formData.vaccines = [formData.vaccine];
+            }
+            let temp = { ...formData };
+
+            temp.dateTime = new Date(
+                temp.date.day + " " + temp.date.month + " " + temp.date.year + " " + temp.time
+            ).toLocaleString();
+            temp.id = ($user.pets[$pet].appointments).length,
+            delete temp.vaccine;
+            delete temp.date;
+            temp.completed = false;
+
+            console.log("Adding to vaccine db:", temp);
+
+            $user.pets[$pet].appointments.push(temp);
             goto("/vaccine");
         }}
     >
@@ -117,6 +156,13 @@
 </div>
 
 <style>
+    p {
+        font-size: var(--font-s);
+        margin: 0;
+    }
+    .Illustration > img {
+        margin-top: -2rem;
+    }
     .Illustration {
         background-color: var(--color-enabled);
         border-radius: var(--radius-large);

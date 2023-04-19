@@ -1,4 +1,6 @@
 <script>
+    import { user } from "$lib/stores.js";
+    export let id;
     export let type;
     export let title;
     export let body;
@@ -7,21 +9,24 @@
 
     function toggleArticleSave(event) {
         event.preventDefault();
+        $user.savedArticles.push(id);
         saved = !saved;
     }
 </script>
 
 <div class="Article">
-    <img src={src} alt="Article Cover"/>
+    <img {src} alt="Article Cover" />
     <div class="ArticleContent">
         <div>
             <b>{type.toUpperCase()}</b>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <img
-                src={saved?"./bookmark-checked.svg":"./bookmark-unchecked.svg"}
+                src={saved
+                    ? "./bookmark-checked.svg"
+                    : "./bookmark-unchecked.svg"}
                 alt="Icon"
                 on:click={toggleArticleSave}
-                />
+            />
         </div>
         <h4>{title}</h4>
         <p>{body}</p>
@@ -34,13 +39,13 @@
         display: flex;
         border: solid 1px var(--color-border);
         padding: 1rem;
-        height: 8rem;
+        height: 9rem;
     }
     .Article > img {
         border: solid 1px var(--color-border);
         border-radius: var(--radius-small);
         width: 7rem;
-        height: 6rem;
+        height: 7rem;
         object-fit: cover;
         flex-grow: 1;
     }
@@ -49,13 +54,18 @@
         width: 70%;
         flex-grow: 0;
     }
-    .ArticleContent > div > b{
+    .ArticleContent > div > b {
         font-size: var(--font-xs);
         font-weight: 600;
     }
     .ArticleContent > h4 {
         font-size: var(--font-m);
         font-weight: 600;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow-y: hidden;
+        text-overflow: ellipsis;
     }
     .ArticleContent > p {
         font-size: var(--font-s);

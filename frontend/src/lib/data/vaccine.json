@@ -1,0 +1,52 @@
+[
+    {
+        "name": "FPV",
+        "maxDoses": 4,
+        "gap": 25
+    },
+    {
+        "name": "FHV-1",
+        "maxDoses": 4,
+        "gap": 25
+    },
+    {
+        "name": "Rabies - Cat",
+        "maxDoses": 100,
+        "gap": 365
+    },
+    {
+        "name": "FeLV",
+        "maxDoses": 2,
+        "gap": 20
+    },
+    {
+        "name": "FIP",
+        "maxDoses": 2,
+        "gap": 25
+    },
+    {
+        "name": "Distemper",
+        "maxDoses": 3,
+        "gap": 25
+    },
+    {
+        "name": "Adenovirus-2",
+        "maxDoses": 3,
+        "gap": 25
+    },
+    {
+        "name": "Parainfluenza",
+        "maxDoses": 3,
+        "gap": 25
+    },
+    {
+        "name": "Parvovirus",
+        "maxDoses": 3,
+        "gap": 25
+    },
+    {
+        "name": "Rabies - Dog",
+        "maxDoses": 100,
+        "gap": 365
+    }
+]
