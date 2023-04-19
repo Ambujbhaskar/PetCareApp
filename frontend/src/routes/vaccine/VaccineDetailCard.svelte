@@ -43,11 +43,11 @@
             {(appointment.completed ? "Completed" : status) + " Appointment"}
         </h5>
         <div>
-            <button class="MapButton">
+            <a href={"http://maps.google.com/maps?z=12&t=m&q=loc:" + appointment.location.lat +"+"+ appointment.location.lng } target="_blank" class="MapButton" >
                 <!-- svelte-ignore a11y-missing-attribute -->
                 <img src={"/direction-icon.svg"} />
                 <h4>Open in Maps</h4>
-            </button>
+            </a>
             <button
                 class="EditButton"
                 on:click={() => goto(`/vaccine/addVaccineSchedule/${id}`)}
@@ -208,6 +208,13 @@
         font-weight: 500;
     }
     .CardContentArea > div > button {
+        border: solid 1px #000000;
+        border-radius: 1.1rem;
+        height: 2.2rem;
+        margin-bottom: 0.75rem;
+        margin-top: 0.75rem;
+    }
+    .CardContentArea > div > a {
         border: solid 1px #000000;
         border-radius: 1.1rem;
         height: 2.2rem;
