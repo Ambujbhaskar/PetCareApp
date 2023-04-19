@@ -1,4 +1,5 @@
 <script>
+  import { lostPetRequests } from "$lib/stores.js";
   let viewAll = false;
 
   export let data;
@@ -34,7 +35,7 @@
   <div
     class="flex flex-col gap-5 justify-between items-center mt-5 transition-all duration-200 delay-500"
   >
-    {#each data.lostPets as pets, i}
+    {#each $lostPetRequests as pets, i}
       <a href={`/sos/${pets.id}`} data-sveltekit-noscroll class="w-full">
         {#if i <= 2 && !viewAll}
           <div
@@ -50,7 +51,7 @@
               class="flex flex-col justify-evenly items-center ml-[2rem] mr-[1rem] p-2"
             >
               <div class="font-bold text-[1.3rem]">Name - {pets.name}</div>
-              <div class="">Last seen - {pets.location}</div>
+              <div class="">Last seen - {pets.lastSeen}</div>
               <div>Contact - {pets.contact}</div>
             </div>
           </div>
@@ -70,7 +71,7 @@
               class="flex flex-col justify-evenly items-center ml-[2rem] mr-[1rem] p-2"
             >
               <div class="font-bold text-[1.3rem]">Name - {pets.name}</div>
-              <div class="">Last seen - {pets.location}</div>
+              <div class="">Last seen - {pets.lastSeen}</div>
               <div>Contact - {pets.contact}</div>
             </div>
           </div>

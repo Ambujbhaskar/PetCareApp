@@ -1,9 +1,12 @@
 <script>
   import SuggestedArticles from "../common/SuggestedArticles.svelte";
+  import Article from "../common/Article.svelte";
+  import articles from "$lib/data/articles.json";
 
+  let searchTerm = "";
   let selectedProfile = 0;
   let saved;
-  let bookMarked;
+  let bookMarked = false;
   let search;
   let tabs = [
     { name: "CATS", active: false },
@@ -12,14 +15,48 @@
     { name: "VETS", active: false },
     { name: "VACCINATION", active: false },
   ];
+  let allArticles = articles;
+
+  function searchArticles() {
+    allArticles = articles.filter((article) => {
+      return (
+        article["Title"].toUpperCase().includes(searchTerm.toUpperCase()) ||
+        article["Body"].toUpperCase().includes(searchTerm.toUpperCase())
+      );
+    });
+  }
 
   function setActiveTab(index) {
     tabs = tabs.map((tab, i) => ({ ...tab, active: i === index }));
+    allArticles = articles.filter((article) => {
+      console.log(article);
+      if (bookMarked) {
+        return (
+          article["Saved"] === bookMarked &&
+          article["Type"].toUpperCase() === tabs[index].name
+        );
+      }
+
+      return article["Type"].toUpperCase() === tabs[index].name;
+    });
+    console.log(allArticles);
   }
 
-  function bookMarked_op() {
-    bookMarked = !bookMarked;
+  function bookmark_articles() {
+    let Index = tabs.findIndex((tab) => tab.active);
+    allArticles = articles.filter((article) => {
+      if (bookMarked) {
+        return (
+          article["Saved"] === bookMarked &&
+          article["Type"].toUpperCase() === tabs[Index].name
+        );
+      }
+
+      return article["Type"].toUpperCase() === tabs[Index].name;
+    });
   }
+
+  $: bookmark_articles();
 </script>
 
 <svelte:head>
@@ -40,6 +77,7 @@
             items-center cursor-pointer mr-2 ${bookMarked && "bg-[#F2F4D1]"}`}
             on:click={() => {
               bookMarked = true;
+              bookmark_articles();
             }}
           >
             <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -50,6 +88,7 @@
               alt="Icon"
               on:click={() => {
                 bookMarked = true;
+                bookmark_articles();
               }}
             />
             View Bookmarks
@@ -60,6 +99,7 @@
               alt="Icon"
               on:click={() => {
                 bookMarked = false;
+                bookmark_articles();
               }}
               class="cursor-pointer transition duration-800 ease-in-out delay-700 h-[2rem]"
             />
@@ -71,6 +111,7 @@
                   ${bookMarked && "bg-[#F2F4D1]"}`}
           on:click={() => {
             bookMarked = true;
+            bookmark_articles();
             search = false;
           }}
         >
@@ -81,6 +122,7 @@
               : "./bookmark-unchecked.svg"}
             alt="Icon"
             on:click={() => {
+              bookmark_articles();
               bookMarked = true;
             }}
           />
@@ -88,7 +130,9 @@
       {/if}
 
       {#if !search}
-        <div class="transition duration-800 ease-in-out rounded-[1rem] h-[2rem] ">
+        <div
+          class="transition duration-800 ease-in-out rounded-[1rem] h-[2rem]"
+        >
           <img
             src={"./search.svg"}
             alt="Search"
@@ -104,7 +148,13 @@
           transition duration-2000 ease-in-out"
         >
           <img src="./search_icon.svg" alt="Search" class="mr-4" />
-          <input type="text" placeholder="Search" class="outline-none w-full" />
+          <input
+            type="text"
+            placeholder="Search"
+            class="outline-none w-full"
+            bind:value={searchTerm}
+            on:input={searchArticles}
+          />
         </div>
       {/if}
     </div>
@@ -127,7 +177,19 @@
         </div>
       {/each}
     </div>
-    <SuggestedArticles />
+    <div class="SuggestedArticlesContainer">
+      {#each allArticles as { id, Type, Title, Body, Imgsrc, Saved }, i}
+        <a href={`/blogs/${id}`} data-sveltekit-noscroll>
+          <Article
+            type={Type}
+            title={Title}
+            body={Body}
+            src={Imgsrc}
+            saved={Saved}
+          />
+        </a>
+      {/each}
+    </div>
   </div>
 </section>
 
@@ -140,5 +202,11 @@
   }
   .Articles {
     margin-top: 1rem;
+  }
+
+  .SuggestedArticlesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 </style>
