@@ -43,12 +43,16 @@
 	<h1>Manage Pets</h1>
 	<br/>
 	<div class="pet-list">
-		{#each data["pets"] as pet}
-			<button class="pet-card" on:click={() => goto("/profile/" + pet["name"])}>
-				<img src={pet['src']} class="pet-image" alt="photo of {pet['name']}"/>
-				{pet['name']}
-			</button>
-		{/each}
+		{#if data["pets"].length > 0}
+			{#each data["pets"] as pet}
+				<button class="pet-card" on:click={() => goto("/profile/" + pet["name"])}>
+					<img src={pet['src']} class="pet-image" alt="photo of {pet['name']}"/>
+					{pet['name']}
+				</button>
+			{/each}
+		{:else}
+				<img src="no-pets-added.svg" alt="empty pet list"/>
+		{/if}
 	</div>
 	<br/>
 	<a class="pet-add-button" href="/profile/addpet">
@@ -59,17 +63,21 @@
 
 	<h1>Lost pet requests</h1><br/>
 	<div class="lost-pet-list">
-		{#each data["lostPetRequests"] as pet}
-			<div class="lost-pet-card">
-				<img src={pet['imgSrc']} class="lost-pet-image" alt="photo of {pet['name']}"/>
-				<div>
-					<p class="lost-pet-name">Name - {pet['name']}</p>
-					<p>Last seen - {pet['lastSeen']}</p>
-						<br/>
-					<p class="lost-pet-contact">Contact - {pet['contact']}</p>
+		{#if data["lostPetRequests"].length > 0}
+			{#each data["lostPetRequests"] as pet}
+				<div class="lost-pet-card">
+					<img src={pet['imgSrc']} class="lost-pet-image" alt="photo of {pet['name']}"/>
+					<div>
+						<p class="lost-pet-name">Name - {pet['name']}</p>
+						<p>Last seen - {pet['lastSeen']}</p>
+							<br/>
+						<p class="lost-pet-contact">Contact - {pet['contact']}</p>
+					</div>
 				</div>
-			</div>
-		{/each}
+			{/each}
+		{:else}
+			<img src="no-lost-pet-requests.svg" alt="empty lost pet list"/>
+		{/if}
 	</div>
 </div>
 
