@@ -1,0 +1,30 @@
+GET http://localhost:3001/api/requests
+###
+
+GET http://localhost:3001/api/requests
+###
+
+POST http://localhost:3001/api/requests
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0MWU5MTFlOTNkMDk1MTgzMDliMzU5IiwiaWF0IjoxNjgyMDQxMTEwLCJleHAiOjE2ODIwNDQ3MTB9.9pFc2t_uwJTXqSwjnyCt5oA5xRDXutxcOUKsQfCnN9w
+Content-Type: application/json
+
+{
+    "clinic_id": "clinic123",
+    "date": "2022-01-01",
+    "status": "Pending"
+}
+###
+
+# PATCH http://localhost:3000/{{request_id}}
+# Content-Type: application/json
+
+# {
+#     "clinic_id": "clinic456",
+#     "date": "2022-01-02",
+#     "status": "Approved"
+# }
+
+# Delete a request
+DELETE http://localhost:3001/api/requests/{request_id}
+
+###

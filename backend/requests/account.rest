@@ -1,0 +1,36 @@
+POST http://localhost:3001/api/account/signup
+content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "johndoe@example.com",
+    "password": "password123"
+}
+
+# Expected response
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+
+# {
+#     "message": "Signup successful!",
+#     "token": "<JWT token>"
+# }
+
+###
+
+POST http://localhost:3001/api/account/login
+content-Type: application/json
+
+{
+    "email": "johndoe@example.com",
+    "password": "password123"
+}
+
+# Expected response
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+
+# {
+#     "message": "Login successful!",
+#     "token": "<JWT token>"
+# }
