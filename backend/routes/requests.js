@@ -21,7 +21,7 @@ router.get('/user', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     if (
       !req.body.name ||
@@ -46,7 +46,8 @@ router.post('/', async (req, res) => {
       last_seen_location: new Location(req.body.last_location)
     });
 
-    const newRequest = await request.save().select("-user_id");
+    //! do not send user_id
+    const newRequest = await request.save();
     res.status(201).json(newRequest);
   } catch (err) {
     next(err);
@@ -73,16 +74,16 @@ router.post('/', async (req, res) => {
 // });
 
 // Delete a request
-router.delete('/', async (req, res) => {
+router.delete('/:requestId', async (req, res, next) => {
   try {
-    const request = await Request.findById(req.params.id);
+    const request = await Request.findById(req.params.requestId);
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
     }
-    if (request.user_id !== req.user_id) {
+    if (request.user_id.toString() !== req.user_id) {
       return res.status(403).json({ message: 'Access denied' });
     }
-    await request.remove();
+    await request.deleteOne();
     res.status(200).json({ message: 'Request deleted' });
   } catch (err) {
     next(err);

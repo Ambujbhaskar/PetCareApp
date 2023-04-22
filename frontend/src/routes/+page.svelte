@@ -10,6 +10,12 @@
 	// function
 	import { getAppointmentStatus } from "./common/util.js";
 
+	/*
+		Fetch Appointments 
+		Fetch Articles
+		Fetch Saved Articles for the user
+	*/
+
 	$: apts = $user.pets[$pet].appointments;
 	$: nextAppointment = apts.reduce((acc, curr) => {
 		const status = getAppointmentStatus(curr, apts);

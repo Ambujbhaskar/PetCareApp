@@ -1,17 +1,23 @@
 GET http://localhost:3001/api/requests
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTczNjExLCJleHAiOjE2ODIxNzcyMTF9.kDa8C3CnWQlrJwll4HZvUZGdZgo1CfWs1kTSiTOypOw
 ###
 
-GET http://localhost:3001/api/requests
+GET http://localhost:3001/api/requests/user
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTczNjExLCJleHAiOjE2ODIxNzcyMTF9.kDa8C3CnWQlrJwll4HZvUZGdZgo1CfWs1kTSiTOypOw
 ###
 
 POST http://localhost:3001/api/requests
-authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0MWU5MTFlOTNkMDk1MTgzMDliMzU5IiwiaWF0IjoxNjgyMDQxMTEwLCJleHAiOjE2ODIwNDQ3MTB9.9pFc2t_uwJTXqSwjnyCt5oA5xRDXutxcOUKsQfCnN9w
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTczNjExLCJleHAiOjE2ODIxNzcyMTF9.kDa8C3CnWQlrJwll4HZvUZGdZgo1CfWs1kTSiTOypOw
 Content-Type: application/json
 
 {
-    "clinic_id": "clinic123",
-    "date": "2022-01-01",
-    "status": "Pending"
+    "name": "clinic123",
+    "contact": "2022010101",
+    "note": "he loves to eat grapes",
+    "image_uri": "empty",
+    "date_time_missing": "Mon Jan 01 2001 10:00:00 GMT+0530 (India Standard Time)",
+    "last_seen": "Jasola",
+    "last_location": {"latitude": 28.5440, "longitude": 77.2914}
 }
 ###
 
@@ -25,6 +31,7 @@ Content-Type: application/json
 # }
 
 # Delete a request
-DELETE http://localhost:3001/api/requests/{request_id}
+DELETE http://localhost:3001/api/requests/6443f971fb20b2b7c0f66473
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTc3NDc5LCJleHAiOjE2ODIxODEwNzl9.vWyhsONbx9vux-xFK39TklPA6dcEUQDhetcKb1yUzxQ
 
 ###

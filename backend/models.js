@@ -8,7 +8,7 @@ mongoose.connect(process.env.DATABASE_URL)
 })
 .catch((error) => {
 	console.log('error connecting to MongoDB:', error.message)
-})
+});
 
 const locationSchema = new mongoose.Schema({
   latitude: {
@@ -41,7 +41,8 @@ const clinicSchema = new mongoose.Schema({
 	_id: ObjectId,
 	name: String,
 	address: String,
-	hours: String,
+	opening_hour: Date,
+	closing_hour: Date,
 	image_uri: String,
 	contact: {
 		type: String,

@@ -1,6 +1,10 @@
 <script>
 	import{user} from '$lib/stores.js'
 	import {goto} from '$app/navigation'
+	/**
+	 * FETCH user profile
+	 */
+
 	let data = $user;
 	let editing = false;
 	let userInfoClass = "user-info";

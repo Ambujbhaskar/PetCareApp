@@ -12,6 +12,10 @@
 	</main>
 	<Navbar/>
 </div>
+<!-- svelte-ignore a11y-missing-attribute -->
+<div class="ImgContainer">
+	<img src="/indicator-image.svg" class="IndicatorImage"/>
+</div>
 
 <style>
 	.app {
@@ -32,5 +36,23 @@
 		height: 30rem;
 		max-height: 48rem;
 		overflow-y: scroll;
+	}
+	.ImgContainer {
+		display: none;
+	}
+	@media only screen and (min-width: 600px) {
+		.app {
+			display: none;
+		}
+		.ImgContainer {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			background-color: var(--color-background);
+		}
+		.IndicatorImage {
+			width: 600px;
+		}
 	}
 </style>

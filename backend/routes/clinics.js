@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Clinic = require('../models');
+const {Clinic} = require('../models');
 
-router.post('/:clinicId/reviews', async (req, res) => {
+router.post('/:clinicId/reviews', async (req, res, next) => {
   const { clinicId } = req.params;
   const { review, rating } = req.body;
 
   try {
-    const clinic = await Clinic.findById(clinicId);
+    let clinic = await Clinic.findById(clinicId);
     if (!clinic) {
       return res.status(404).json({ message: 'Clinic not found' });
     }
@@ -19,7 +19,8 @@ router.post('/:clinicId/reviews', async (req, res) => {
       review, 
       rating 
     });
-    clinic = await clinic.save().select("-user_id");
+    //! dont send user id
+    clinic = await clinic.save();
 
     res.status(201).json(clinic);
   } catch (err) {
@@ -27,30 +28,20 @@ router.post('/:clinicId/reviews', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
-    const clinics = await Clinic.aggregate([
-      {
-        $addFields: {
-          totalRating: { $sum: "$reviews.rating" },
-          numReviews: { $size: "$reviews" }
-        }
-      },
-      {
-        $project: {
-          name: 1,
-          contact: 1,
-          location: 1,
-          rating: {
-            $cond: {
-              if: { $eq: [ "$numReviews", 0 ] },
-              then: 0,
-              else: { $divide: [ "$totalRating", "$numReviews" ] }
-            }
-          }
-        }
+    let clinics = await Clinic.find({}).lean();
+    clinics = clinics.map(clinic => {
+      let rating = 0;
+      for (let review of clinic.reviews){
+        rating += review.rating;
       }
-    ]);
+      if (clinic.reviews.length === 0)
+        clinic['rating'] = "unrated";
+      else
+        clinic['rating'] = rating / clinic.reviews.length;
+      return clinic;
+    });
     res.status(200).json(clinics);
   } catch (err) {
     next(err);

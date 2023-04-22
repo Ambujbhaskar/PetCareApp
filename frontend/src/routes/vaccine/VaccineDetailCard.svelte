@@ -66,9 +66,8 @@
                     console.log("Store:", $user);
                     status = "Completed";
 
-                    if (vaccines.length != 0) {
-                        console.log("VAX:", vaccines);
-                        console.log("AV VAX1:", availableVaccines);
+                    if (!vaccines || vaccines.length != 0) {
+                        console.log("vaccines of this appt:", vaccines);
                         vaccines.forEach((vax) => {
                             let v = availableVaccines.filter(
                                 (vac) => vac.name == vax
@@ -78,8 +77,6 @@
                                 v.maxDoses > appointment.doseNo
                             ) {
                                 // create new appointment
-
-                                console.log("AV VAX2:", availableVaccines);
                                 let apts = $user.pets[$pet].appointments;
                                 let newDate = new Date(appointmentDate);
                                 newDate.setDate(newDate.getDate() + v.gap);

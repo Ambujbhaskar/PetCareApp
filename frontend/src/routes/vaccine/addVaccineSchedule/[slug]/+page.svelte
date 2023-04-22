@@ -7,6 +7,9 @@
     /** @type {import('./$types').PageData} */
     export let data;
 
+    /**
+     * FETCH APPOINTments
+    */
     let pets = [...$user.pets];
     $: data = {
         ...$user.pets[$pet].appointments.filter((apt) => apt.id == data.id)[0],
@@ -34,11 +37,6 @@
         location: { ...data.location },
     };
     $: formData = { ...template };
-    // $: {
-    //     console.log(template, template.vaccines);
-    //     console.log(formData);
-    // }
-    // $: console.log("data", formData);
 </script>
 
 <div class="AddVaccines">
@@ -151,7 +149,6 @@
                 formData.vaccines = [formData.vaccine];
             }
             let temp = { ...formData };
-
             temp.dateTime = new Date(
                 temp.date.day +
                     " " +
@@ -169,9 +166,19 @@
 
             console.log("Editing appointment in db:", temp);
 
-            $user.pets[$pet].appointments[data.id] = temp;
+            /*
+             * PUT request to replace existing appointment
+            */
+            let ind = 0;
+            let apts = $user.pets[$pet].appointments;
+            for (let i = 0; i < apts.length; i++) {
+                if (apts[i].id == data.id) {
+                    ind = i;
+                }
+            }
+            $user.pets[$pet].appointments[ind] = temp;
 
-            console.log("USR:", $user);
+            console.log("Userstore after edit:", $user);
 
             goto("/vaccine");
         }}
