@@ -1,1 +1,4 @@
 node_modules/
+frontend/package.json
+.gitignore
+frontend/package-lock.json
