@@ -1,24 +1,40 @@
 <script>
     import { goto } from "$app/navigation";
+    import { URL } from "$lib/stores";
+    import axios from "axios";
 
     let formData = {
-        username: "",
+        email: "",
         password: "",
     };
     let errorState = false;
 
-    function handleSubmit() {
-        if (
-            formData.password.length < 8 ||
-            formData.username.length == 0
-        ) {
+    async function handleSubmit() {
+        if (formData.password.length < 8 || formData.email.length == 0) {
             errorState = true;
             formData = {
-                username: "",
-                password: ""
-            }
+                email: "",
+                password: "",
+            };
             return;
         }
+        axios
+            .post($URL + "/account/login", formData)
+            .then((res) => {
+                console.log(res);
+                errorState = false;
+                sessionStorage.setItem("user-token", res.data.token);
+                goto("/");
+                return res;
+            })
+            .catch((err) => {
+                console.log(err);
+                formData = {
+                    email: "",
+                    password: "",
+                };
+                errorState = true;
+            });
     }
 </script>
 
@@ -31,10 +47,10 @@
         <h4>Email address</h4>
         <input
             placeholder="ENTER YOUR EMAIL ADDRESS"
-            value={formData.username}
+            value={formData.email}
             type="text"
             on:change={(e) => {
-                formData.username = e.target.value;
+                formData.email = e.target.value;
                 errorState = false;
             }}
         />
@@ -49,7 +65,7 @@
             }}
         />
         <p class={"ErrorText " + (errorState ? "enabled" : "")}>
-            Invalid username or password
+            Invalid email or password
         </p>
     </section>
 

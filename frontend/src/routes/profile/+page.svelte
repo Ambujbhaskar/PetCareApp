@@ -1,22 +1,32 @@
 <script>
-	import{user} from '$lib/stores.js'
-	import {goto} from '$app/navigation'
-	/**
-	 * FETCH user profile
-	 */
+	import { user, URL } from "$lib/stores.js";
+	import { goto } from "$app/navigation";
+	import { onMount } from "svelte";
+	import axios from "axios";
+
+	onMount(async () => {
+		axios.get($URL + "/user", {
+			headers: {
+				'authentication': `Bearer ${sessionStorage.getItem("user-token")}`
+			}
+		}).then(data => {
+			console.log("res", data);
+		}).catch(err => {
+			console.log(err);
+		});
+	});
 
 	let data = $user;
 	let editing = false;
 	let userInfoClass = "user-info";
-	$: $user['email'] = data['email'];
-	$: $user['phone'] = data['phone'];
+	$: $user["email"] = data["email"];
+	$: $user["phone"] = data["phone"];
 
 	function toggleEdit() {
 		editing = !editing;
 		if (editing) {
 			userInfoClass = "user-info-editing";
-		}
-		else {
+		} else {
 			userInfoClass = "user-info";
 		}
 	}
@@ -24,63 +34,89 @@
 
 <h1 class="user-name">Hello {data["name"]}</h1>
 <div class="profile-body">
-	<br/>
+	<br />
 	<div class="user-profile">
 		<div class={userInfoClass}>
-			<span>Email - <input disabled={!editing} type=text bind:value={data["email"]}/></span>
-			<span>Phone - <input disabled={!editing} type=text bind:value={data["phone"]}/></span>
+			<span
+				>Email - <input
+					disabled={!editing}
+					type="text"
+					bind:value={data["email"]}
+				/></span
+			>
+			<span
+				>Phone - <input
+					disabled={!editing}
+					type="text"
+					bind:value={data["phone"]}
+				/></span
+			>
 		</div>
 		{#if !editing}
 			<button on:click={toggleEdit} class="profile-edit-button">
-				<img src="/edit.svg" alt="edit icon"/>
+				<img src="/edit.svg" alt="edit icon" />
 				Edit
 			</button>
 		{:else}
 			<button on:click={toggleEdit} class="profile-edit-confirm-button">
-				<img src="/done-black-empty.svg" alt="edit confirm icon"/>
+				<img src="/done-black-empty.svg" alt="edit confirm icon" />
 				Done
 			</button>
 		{/if}
 	</div>
-	<br/>
+	<br />
 
 	<h1>Manage Pets</h1>
-	<br/>
+	<br />
 	<div class="pet-list">
 		{#if data["pets"].length > 0}
 			{#each data["pets"] as pet}
-				<button class="pet-card" on:click={() => goto("/profile/" + pet["name"])}>
-					<img src={pet['src']} class="pet-image" alt="photo of {pet['name']}"/>
-					{pet['name']}
+				<button
+					class="pet-card"
+					on:click={() => goto("/profile/" + pet["name"])}
+				>
+					<img
+						src={pet["src"]}
+						class="pet-image"
+						alt="photo of {pet['name']}"
+					/>
+					{pet["name"]}
 				</button>
 			{/each}
 		{:else}
-				<img src="no-pets-added.svg" alt="empty pet list"/>
+			<img src="no-pets-added.svg" alt="empty pet list" />
 		{/if}
 	</div>
-	<br/>
+	<br />
 	<a class="pet-add-button" href="/profile/addpet">
-		<img src="/plus.svg" alt="plus icon"/>
-		Add a pet 
+		<img src="/plus.svg" alt="plus icon" />
+		Add a pet
 	</a>
-	<br/>
+	<br />
 
-	<h1>Lost pet requests</h1><br/>
+	<h1>Lost pet requests</h1>
+	<br />
 	<div class="lost-pet-list">
 		{#if data["lostPetRequests"].length > 0}
 			{#each data["lostPetRequests"] as pet}
 				<div class="lost-pet-card">
-					<img src={pet['imgSrc']} class="lost-pet-image" alt="photo of {pet['name']}"/>
+					<img
+						src={pet["imgSrc"]}
+						class="lost-pet-image"
+						alt="photo of {pet['name']}"
+					/>
 					<div>
-						<p class="lost-pet-name">Name - {pet['name']}</p>
-						<p>Last seen - {pet['lastSeen']}</p>
-							<br/>
-						<p class="lost-pet-contact">Contact - {pet['contact']}</p>
+						<p class="lost-pet-name">Name - {pet["name"]}</p>
+						<p>Last seen - {pet["lastSeen"]}</p>
+						<br />
+						<p class="lost-pet-contact">
+							Contact - {pet["contact"]}
+						</p>
 					</div>
 				</div>
 			{/each}
 		{:else}
-			<img src="no-lost-pet-requests.svg" alt="empty lost pet list"/>
+			<img src="no-lost-pet-requests.svg" alt="empty lost pet list" />
 		{/if}
 	</div>
 </div>
@@ -98,7 +134,7 @@
 		background: none;
 	}
 
-	.user-name{
+	.user-name {
 		margin-bottom: 0.1rem;
 	}
 	.profile-body {
@@ -107,7 +143,7 @@
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
-	.profile-body::-webkit-scrollbar{
+	.profile-body::-webkit-scrollbar {
 		display: none;
 	}
 
@@ -155,7 +191,7 @@
 		background-color: var(--color-disabled);
 		font-family: var(--font-heading);
 	}
-	.profile-edit-confirm-button{
+	.profile-edit-confirm-button {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
@@ -175,7 +211,7 @@
 		gap: 1rem;
 		height: max-content;
 	}
-	.pet-card{
+	.pet-card {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -189,7 +225,7 @@
 		width: 47%;
 		background-color: var(--color-disabled);
 	}
-	.pet-image{
+	.pet-image {
 		border-radius: var(--radius-small);
 		border-width: 1px;
 		border-color: var(--color-text-primary);
@@ -202,7 +238,7 @@
 		justify-content: center;
 		align-items: center;
 		gap: 0.5rem;
-		border-radius:  20px;
+		border-radius: 20px;
 		border-width: 1px;
 		border-color: var(--color-text-primary);
 		padding: 0.2rem 0rem;
@@ -213,7 +249,7 @@
 		color: var(--color-text-primary);
 	}
 
-	.lost-pet-list{
+	.lost-pet-list {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
@@ -223,7 +259,7 @@
 		gap: 1rem;
 		width: 100%;
 		padding: 0.8rem;
-		border-radius:  var(--radius-large);
+		border-radius: var(--radius-large);
 		border-width: 1px;
 		border-color: var(--color-text-primary);
 	}

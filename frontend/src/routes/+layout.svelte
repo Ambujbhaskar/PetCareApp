@@ -1,8 +1,18 @@
 <script>
-	import Header from './Header.svelte';
-	import Navbar from './Navbar.svelte';
-	import '../app.css'
-	import './styles.css'
+	import { page } from "$app/stores";
+	import { afterNavigate, goto } from "$app/navigation";
+	import Header from "./Header.svelte";
+	import Navbar from "./Navbar.svelte";
+	import "../app.css";
+	import "./styles.css";
+
+	afterNavigate(() => {
+		const url = $page.route.id;
+		if (!(url == "/welcome/login" || url == "/welcome/signup" || url == "/welcome")) {
+			if (!sessionStorage.getItem("user-token"))
+				goto("/welcome");
+		}
+	});
 </script>
 
 <div class="app">
@@ -10,11 +20,11 @@
 	<main>
 		<slot />
 	</main>
-	<Navbar/>
+	<Navbar />
 </div>
 <!-- svelte-ignore a11y-missing-attribute -->
 <div class="ImgContainer">
-	<img src="/indicator-image.svg" class="IndicatorImage"/>
+	<img src="/indicator-image.svg" class="IndicatorImage" />
 </div>
 
 <style>

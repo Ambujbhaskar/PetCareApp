@@ -1,5 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
+    import { URL } from "$lib/stores";
+    import axios from "axios";
 
     let formData = {
         name: "",
@@ -10,9 +12,9 @@
     };
     let errorState = false;
 
-    function handleSubmit() {
+    async function handleSubmit() {
         if (
-            formData.name.length == 0 || 
+            formData.name.length == 0 ||
             formData.email.length == 0 ||
             formData.phone.length != 10 ||
             formData.password.length < 8 ||
@@ -22,7 +24,22 @@
             errorState = true;
             return;
         }
-
+        let temp = { ...formData };
+        delete temp.rePassword;
+        console.log("req", temp);
+        axios
+            .post($URL + "/account/signup", temp)
+            .then((res) => {
+                console.log("response", res);
+                sessionStorage.setItem("user-token", res.data.token);
+                goto("/");
+                errorState = false;
+                return res;
+            })
+            .catch((err) => {
+                console.error(err);
+                errorState = true;
+            });
     }
 </script>
 

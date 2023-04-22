@@ -1,4 +1,6 @@
-import { writable } from "svelte/store";
+import { readable, writable } from "svelte/store";
+
+export const URL = readable("http://localhost:3001/api");
 
 export const pet = writable(0);
 
