@@ -49,7 +49,10 @@ router.post('/', async (req, res, next) => {
 
     user.pets.id(req.body.petId)?.appointments.push(appointment);
     user = await user.save();
-    res.status(201).json(user.pets.id(req.body.petId));
+    let populatedAppointment = appointment.toObject();
+    populatedAppointment["clinic_name"] = clinic.name;
+    console.log(populatedAppointment);
+    res.status(201).json(populatedAppointment);
   } catch (err) {
     next(err);
   }

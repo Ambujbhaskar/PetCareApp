@@ -24,7 +24,7 @@ router.post('/signup', async (req, res, next) => {
 		const token = jwt.sign(
 			{ user_id: newUser._id },
 			process.env.JWT_SECRET,
-			{ expiresIn: '1h' }
+			{ expiresIn: '10h' }
 		);
 		res.status(201).json({ message: 'User created', token });
 	} catch (err) {
@@ -46,7 +46,7 @@ router.post('/login', async (req, res, next) => {
 		const token = jwt.sign(
 			{ user_id: user._id },
 			process.env.JWT_SECRET,
-			{ expiresIn: '1h' }
+			{ expiresIn: '10h' }
 		);
 		res.status(200).json({ message: 'Authentication successful', token });
 	} catch (err) {
