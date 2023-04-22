@@ -17,22 +17,23 @@ const { User, Appointment, Clinic } = require('../models');
 //   }
 // });
 
-router.post('/:petId', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
 		if (
+      !req.body.petId ||
 			!req.body.clinic_id ||
 			!req.body.date_time ||
 			!req.body.doctor_name
 		)
 			return res.status(400).json({message: "malformed request"})
 		
-		const user = await User.findById(req.user_id);
+		let user = await User.findById(req.user_id);
     const clinic = await Clinic.findById(req.body.clinic_id);
     if (!user || !clinic) {
       return res.status(400).json({ message: 'Clinic does not exist' });
     }
-    let pet = user.pets.filter(pet => pet._id = req.params.petId)[0];
-    if (!pet) {
+    
+    if (!user.pets.id(req.body.petId)) {
       return res.status(400).json({ message: 'Pet does not exist' });
     }
 
@@ -46,58 +47,60 @@ router.post('/:petId', async (req, res) => {
       user_id: req.user_id,
     });
 
-    pet.appointments.push(appointment);
-    pet = await pet.save();
-    res.status(201).json(pet);
+    user.pets.id(req.body.petId)?.appointments.push(appointment);
+    user = await user.save();
+    res.status(201).json(user.pets.id(req.body.petId));
   } catch (err) {
     next(err);
   }
 });
 
-router.patch('/:appointmentId', async (req, res) => {
+router.patch('/:appointmentId', async (req, res, next) => {
   try {
-    const appointment = await Appointment.findById(req.params.appointmentId).populate('clinic_id');
-    if (!appointment) {
+    const user = await User.findById(req.user_id);
+    if (!req.body.petId || !user.pets.id(req.body.petId)) {
+      return res.status(404).json({ message: 'malformed request' });
+    }
+    if (!user.pets.id(req.body.petId).appointments.id(req.params.appointmentId)){
       return res.status(404).json({ message: 'Appointment not found' });
     }
+    let copyAppointment = user.pets.id(req.body.petId).appointments.id(req.params.appointmentId)
+    
+    copyAppointment.clinic_id = req.body.clinic_id || copyAppointment.clinic_id;
+    copyAppointment.doctor_name = req.body.doctor_name || copyAppointment.doctor_name;
+    copyAppointment.date_time = req.body.date_time || copyAppointment.date_time;
+    copyAppointment.completed = req.body.completed !== undefined ? req.body.completed : copyAppointment.completed;
 
-    // Only allow editing certain fields
-    appointment.clinic_id = req.body.clinic_id || appointment.clinic_id;
-    appointment.doctor_name = req.body.doctor_name || appointment.doctor_name;
-    appointment.date_time = req.body.date_time || appointment.date_time;
-    appointment.completed = req.body.completed !== undefined ? req.body.completed : appointment.completed;
-
-    // Check if clinic exists
-    const clinic = await Clinic.findById(appointment.clinic_id);
+    const clinic = await Clinic.findById(copyAppointment.clinic_id);
     if (!clinic) {
       return res.status(400).json({ message: 'Clinic does not exist' });
     }
 
-    // Update appointment location with clinic location
-    appointment.location = clinic.location;
+    copyAppointment.location = clinic.location;
 
-    const savedAppointment = await appointment.save();
-    res.json(savedAppointment);
+    user.pets.id(req.body.petId).appointments.id(req.params.appointmentId).set(copyAppointment)
+    await user.save();
+    res.status(200).json(copyAppointment);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    next(err);
   }
 });
 
-// Delete an appointment
-router.delete('/:appointmentId', async (req, res) => {
+router.delete('/:appointmentId', async (req, res, next) => {
   try {
-    // Check if appointment exists
-    const appointment = await Appointment.findById(req.params.appointmentId);
-    if (!appointment) {
+    const user = await User.findById(req.user_id);
+    if (!req.body.petId || !user.pets.id(req.body.petId)) {
+      return res.status(404).json({ message: 'malformed request' });
+    }
+    if (!user.pets.id(req.body.petId).appointments.id(req.params.appointmentId)){
       return res.status(404).json({ message: 'Appointment not found' });
     }
 
-    await Appointment.deleteOne({ _id: req.params.appointmentId });
-    res.json({ message: 'Appointment deleted successfully' });
+    user.pets.id(req.body.petId).appointments.id(req.params.appointmentId).deleteOne();
+    await user.save();
+    res.status(200).json({ message: 'Appointment deleted successfully' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    next(err);
   }
 });
 
