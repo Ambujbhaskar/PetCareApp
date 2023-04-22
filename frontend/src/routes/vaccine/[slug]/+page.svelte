@@ -10,6 +10,9 @@
 
     /** @type {import('./$types').PageData} */
     export let data;
+    /*
+        Fetch Appointments
+    */
     $: apts = [...$user.pets[$pet].appointments];
     $: app = apts.filter((a) => (a.id == [data.id]))[0];
     $: status = getAppointmentStatus(app, apts);

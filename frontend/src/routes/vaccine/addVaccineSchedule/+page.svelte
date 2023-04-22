@@ -145,6 +145,10 @@
 
             console.log("Adding to vaccine db:", temp);
 
+            /*
+             * PUT request to add appointment
+            */
+           
             $user.pets[$pet].appointments.push(temp);
             goto("/vaccine");
         }}

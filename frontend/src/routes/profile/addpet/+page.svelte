@@ -68,6 +68,9 @@
 	}
 	function handleSubmit() {
 		if (validateFields()){
+			/*
+				PUT request to create new pet 
+			*/
 			$user["pets"].push(petState);
 			goto('/profile');
 		}
