@@ -1,13 +1,33 @@
 <script>
-  import { user } from "$lib/stores.js";
+  import { user, URL } from "$lib/stores.js";
+  import { onMount } from "svelte";
+  import axios from "axios";
+
   import Article from "./Article.svelte";
-  import articles from "$lib/data/articles.json";
+  let articles = [];
+  onMount(() => {
+    axios
+			.get($URL + "/articles", {
+				headers: {
+					authentication: `Bearer ${sessionStorage.getItem(
+						"user-token"
+					)}`,
+				},
+			})
+			.then((res) => {
+				articles = res.data;
+				console.log("ARTICLES", res.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+  })
 </script>
 
 <div class="SuggestedArticlesContainer">
-  {#each articles as { id, tag, title, content, image }, i}
-    <a href={`/blogs/${id}`} data-sveltekit-noscroll>
-      <Article id={id} type={tag} {title} body={content} src={image} saved={($user.savedArticles.filter((a) => (a==id))).length != 0} />
+  {#each articles as { _id, tag, title, content, image_uri }, i}
+    <a href={`/blogs/${_id}`} data-sveltekit-noscroll>
+      <Article id={_id} type={tag} {title} body={content} src={image_uri} saved={($user.savedArticles.filter((a) => (a==_id))).length != 0} />
     </a>
   {/each}
 </div>

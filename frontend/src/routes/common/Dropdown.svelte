@@ -1,16 +1,21 @@
 <script>
-    import { goto } from '$app/navigation';
+    import { goto } from "$app/navigation";
+    import { user } from "$lib/stores";
     import Option from "./Option.svelte";
 
     export let options;
     export let value;
-    $: selectedOption = options[value];
 
+    // $: console.log("OPTIONS", options);
+    $: selectedOption =
+        options.filter((option) => option.id == value)[0] ||
+        [];
+    // $: console.log("SO", selectedOption);
     let state = false;
     const imgsrc = "/down-arrow-idle.svg";
 
     function handleStateChange() {
-        state=!state;
+        state = !state;
     }
     function addPet() {
         goto("/profile/addpet");
@@ -18,38 +23,48 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class={"Dropdown"+(state?"Active":"Idle")} on:click={handleStateChange}>
-    <div class={"SelectedValue"+(state?"Active":"Idle")}>
+<div
+    class={"Dropdown" + (state ? "Active" : "Idle")}
+    on:click={handleStateChange}
+>
+    <div class={"SelectedValue" + (state ? "Active" : "Idle")}>
         <Option
             key={selectedOption.id}
-            bind:value={value}
+            bind:value
             isDropdownActive={state}
-            options={options}
+            {options}
         />
         <span>
-            <img src={imgsrc} alt="dropdown button" class="DropdownButton"/>
+            <img src={imgsrc} alt="dropdown button" class="DropdownButton" />
         </span>
     </div>
     {#if state}
-        <div class={"List"+(state?"Active":"Idle")}>
+        <div class={"List" + (state ? "Active" : "Idle")}>
             {#each options as option}
                 {#if option.id != value}
                     <Option
                         key={option.id}
-                        bind:value={value}
+                        bind:value
                         isDropdownActive={state}
-                        options={options}
+                        {options}
                     />
                 {/if}
-            {/each}        
+            {/each}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class={state?"Default NoPadding":"Default IdleColor NoPadding"} on:click={addPet}>
-                <img src={"/add-with-circle.png"} alt={"add symbol"} class="RoundImg" />
+            <div
+                class={state
+                    ? "Default NoPadding"
+                    : "Default IdleColor NoPadding"}
+                on:click={addPet}
+            >
+                <img
+                    src={"/add-with-circle.png"}
+                    alt={"add symbol"}
+                    class="RoundImg"
+                />
                 <p>Add pet</p>
             </div>
         </div>
-                
-
     {/if}
 </div>
 
@@ -76,7 +91,7 @@
         height: 1rem;
         width: 1rem;
         border-radius: 0.5rem;
-        margin: .15rem;
+        margin: 0.15rem;
         margin-left: 0.4rem;
         margin-right: 0.5rem;
         height: 1.5rem;

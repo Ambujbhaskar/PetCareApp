@@ -2,15 +2,16 @@
     export let appointment;
     export let status;
     $: id = appointment.id;
-    $: appointmentDate = new Date(appointment.dateTime);
+    $: appointmentDate = new Date(appointment.date_time);
+    $: console.log("DEEZ", appointmentDate.toLocaleDateString([], { day: "numeric" }));
     $: day = appointmentDate.toLocaleDateString([], { day: "numeric" });
     $: month = appointmentDate.toLocaleDateString([], { month: "long" });
     $: time = appointmentDate.toLocaleTimeString([], {
         hour: "numeric",
         minute: "2-digit",
     });
-    $: clinic = appointment.clinic;
-    $: doctor = appointment.doctor;
+    $: clinic = appointment.clinic_id;
+    $: doctor = appointment.doctor_name;
 </script>
 
 <a href={`/vaccine/${id}`} class={"VaccineCard"}>
@@ -96,6 +97,7 @@
     .CardContentArea > h4 {
         font-size: var(--font-xl);
         font-weight: 700;
+        word-break: break-all;
     }
     .CardContentArea > p::before {
         content: "with ";
