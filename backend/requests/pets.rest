@@ -1,0 +1,28 @@
+POST http://localhost:3001/api/pets
+Content-Type: application/json
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTg0NjE2LCJleHAiOjE2ODIxODgyMTZ9.L3KbOUpJ__VJ-2B4tGrk9wTmjppcuRduF6N2fLdBTIM
+
+{
+  "name": "Fluffy",
+  "dob": "2019-01-01",
+  "species": "cat",
+  "weight": 4,
+  "breed": "Persian",
+  "bloodGroup": "B",
+  "notes": "Likes to sleep a lot",
+  "image_uri": "https://images.unsplash.com/photo-1529778873920-4da4926a72c2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y3V0ZSUyMGNhdHxlbnwwfHwwfHw%3D&w=1000&q=80"
+}
+
+###
+
+PATCH http://localhost:3001/api/pets/644419f48c6e9a980c9430e1
+Content-Type: application/json
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTg0NjE2LCJleHAiOjE2ODIxODgyMTZ9.L3KbOUpJ__VJ-2B4tGrk9wTmjppcuRduF6N2fLdBTIM
+
+{
+  "name": "Leo"
+}
+
+###
+DELETE http://localhost:3001/api/pets/644419f48c6e9a980c9430e1
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTg0NjE2LCJleHAiOjE2ODIxODgyMTZ9.L3KbOUpJ__VJ-2B4tGrk9wTmjppcuRduF6N2fLdBTIM

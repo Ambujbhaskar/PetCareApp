@@ -59,9 +59,9 @@ const clinicSchema = new mongoose.Schema({
 
 const articleSchema = new mongoose.Schema({
 	_id: ObjectId,
-	topic: String,
+	tag: String,
 	title: String,
-	body: String,
+	content: String,
 	image_uri: {
     type: String,
     validate: {
