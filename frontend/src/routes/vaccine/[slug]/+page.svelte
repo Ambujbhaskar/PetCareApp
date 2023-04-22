@@ -1,24 +1,50 @@
 <script>
     import { goto } from "$app/navigation";
-    import { pet, user } from "$lib/stores.js";
+    import { pet, user, URL } from "$lib/stores.js";
 
     import VaccineDetailCard from "../VaccineDetailCard.svelte";
     import VaccineCard from "../../common/VaccineCard.svelte";
     import Dropdown from "../../common/Dropdown.svelte";
 
     import { getAppointmentStatus, vaccineComparator } from "../../common/util";
+    import { onMount } from "svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
-    /*
-        Fetch Appointments
-    */
-    $: apts = [...$user.pets[$pet].appointments];
-    $: app = apts.filter((a) => (a.id == [data.id]))[0];
-    $: status = getAppointmentStatus(app, apts);
+    
+	let userObject = {};
+	let petsArr = [];
+	let petObj = {};
+	let petApts = [];
+    onMount(async () => {
+		await axios
+			.get($URL + "/user", {
+				headers: {
+					authentication: `Bearer ${sessionStorage.getItem(
+						"user-token"
+					)}`,
+				},
+			})
+			.then((res) => {
+				userObject = res.data;
+				petsArr = userObject.pets;
+				petObj = petsArr[0];
+				petApts = petObj.appointments;
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	});
+	petObj = petsArr.filter(p => p._id == $pet)?.[0] || {appointments: []};
+	petApts = petObj.appointments;
+
+    $: petApts = [...$user.pets[$pet].appointments];
+    $: app = petApts.filter((a) => (a._id == [data._id]))[0];
+    $: console.log(app, petApts, "AAAAAAAAAAAAAA");
+    $: status = getAppointmentStatus(app, petApts);
     
     let view = "Upcoming";
-    $: viewableAppointmentList = apts
+    $: viewableAppointmentList = petApts
         .sort(vaccineComparator)
         .filter((apt, i) => {
             if (view == "Past") {

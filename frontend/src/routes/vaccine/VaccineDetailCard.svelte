@@ -5,22 +5,22 @@
     import availableVaccines from "$lib/data/vaccine";
 
     export let appointment;
-    $: id = appointment.id;
-    $: appointmentDate = new Date(appointment.dateTime);
-    $: day = appointmentDate.toLocaleDateString([], { day: "numeric" });
-    $: month = appointmentDate.toLocaleDateString([], { month: "long" });
-    $: time = appointmentDate.toLocaleTimeString([], {
+    $: id = appointment?._id;
+    $: appointmentDate = new Date(appointment?.date_time);
+    $: day = appointmentDate?.toLocaleDateString([], { day: "numeric" });
+    $: month = appointmentDate?.toLocaleDateString([], { month: "long" });
+    $: time = appointmentDate?.toLocaleTimeString([], {
         hour: "numeric",
         minute: "2-digit",
     });
-    $: clinic = appointment.clinic;
-    $: doctor = appointment.doctor;
-    $: vaccines = appointment.vaccines;
+    $: clinic = appointment?.clinic_id;
+    $: doctor = appointment?.doctor_name;
+    $: vaccines = appointment?.vaccines;
     export let status;
 </script>
 
 <div class="VaccineDetailCard">
-    <span class={"Date " + (appointment.completed ? "Completed" : status)}>
+    <span class={"Date " + (appointment?.completed ? "Completed" : status)}>
         <h1>{day}</h1>
         <h4>{month.toUpperCase()}</h4>
     </span>
@@ -36,14 +36,14 @@
         <h5
             class={(status != "Next"
                 ? status
-                : appointment.completed
+                : appointment?.completed
                 ? "Completed"
                 : "Next") + "Text"}
         >
-            {(appointment.completed ? "Completed" : status) + " Appointment"}
+            {(appointment?.completed ? "Completed" : status) + " Appointment"}
         </h5>
         <div>
-            <a href={"http://maps.google.com/maps?z=12&t=m&q=loc:" + appointment.location.lat +"+"+ appointment.location.lng } target="_blank" class="MapButton" >
+            <a href={"http://maps.google.com/maps?z=12&t=m&q=loc:" + appointment?.location?.lat +"+"+ appointment?.location?.lng } target="_blank" class="MapButton" >
                 <!-- svelte-ignore a11y-missing-attribute -->
                 <img src={"/direction-icon.svg"} />
                 <h4>Open in Maps</h4>
@@ -56,7 +56,7 @@
                 <img src={"/edit-icon-green.svg"} />
             </button>
         </div>
-        {#if !appointment.completed}
+        {#if !appointment?.completed}
             <button
                 class={"DoneButton"}
                 on:click={() => {

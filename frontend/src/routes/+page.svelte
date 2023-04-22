@@ -9,17 +9,12 @@
 	import SuggestedArticles from "./common/SuggestedArticles.svelte";
 	import { getAppointmentStatus } from "./common/util.js";
 
-	/*
-		Fetch Pets list
-		Fetch Appointments 
-		Fetch Saved Articles for the user
-		Fetch Articles
-	*/
 	let userObject = {};
 	let petsArr = [];
 	let petObj = {};
 	let petApts = [];
-	let articles = [];
+	$: activePet = $pet;
+	$: console.log("ACTIVPET:", activePet);
 
 	onMount(async () => {
 		await axios
@@ -34,8 +29,11 @@
 				console.log("res", res);
 				userObject = res.data;
 				petsArr = userObject.pets;
+				console.log(petsArr);
 				petObj = petsArr[0];
+				console.log(petObj);
 				petApts = petObj.appointments;
+				console.log(petApts);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -43,6 +41,9 @@
 	});
 
 	$: console.log("USEROBJ", userObject);
+	
+	petObj = petsArr.filter(p => p._id == $pet)?.[0] || {appointments: []};
+	petApts = petObj.appointments;
 
 	$: nextPetAppointment = petApts.reduce((acc, curr) => {
 		const status = getAppointmentStatus(curr, petApts);

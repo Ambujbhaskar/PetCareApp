@@ -8,7 +8,7 @@
 
     // $: console.log("OPTIONS", options);
     $: selectedOption =
-        options.filter((option) => option.id == value)[0] ||
+        options.filter((option) => option._id == value)[0] ||
         [];
     // $: console.log("SO", selectedOption);
     let state = false;
@@ -29,7 +29,7 @@
 >
     <div class={"SelectedValue" + (state ? "Active" : "Idle")}>
         <Option
-            key={selectedOption.id}
+            key={selectedOption._id}
             bind:value
             isDropdownActive={state}
             {options}
@@ -41,9 +41,9 @@
     {#if state}
         <div class={"List" + (state ? "Active" : "Idle")}>
             {#each options as option}
-                {#if option.id != value}
+                {#if option._id != value}
                     <Option
-                        key={option.id}
+                        key={option._id}
                         bind:value
                         isDropdownActive={state}
                         {options}

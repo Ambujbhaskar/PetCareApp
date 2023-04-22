@@ -1,14 +1,16 @@
-export function getAppointmentStatus(appointment ,appointments) {
+export function getAppointmentStatus(appointment, appointments) {
+    if (appointments.length == 0 || !appointment)
+        return "Next";
     const thisDate = new Date();
     appointments.sort(vaccineComparator);
     // console.log("apts:",appointments);
     const reducer = (accumulator, current, ind) => {
-        let curDate = new Date(current.dateTime);
+        let curDate = new Date(current.date_time);
         if (accumulator < -1)
             return accumulator;
         if (curDate < thisDate)
             accumulator = ind;
-        if (current.dateTime == appointment.dateTime) {
+        if (current.date_time == appointment.date_time) {
             if (ind - accumulator == 1) {
                 // next appointment
                 accumulator = -2;

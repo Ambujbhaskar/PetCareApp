@@ -3,7 +3,7 @@
     export let status;
     $: id = appointment.id;
     $: appointmentDate = new Date(appointment.date_time);
-    $: console.log("DEEZ", appointmentDate.toLocaleDateString([], { day: "numeric" }));
+    // $: console.log("DEEZ", appointmentDate.toLocaleDateString([], { day: "numeric" }));
     $: day = appointmentDate.toLocaleDateString([], { day: "numeric" });
     $: month = appointmentDate.toLocaleDateString([], { month: "long" });
     $: time = appointmentDate.toLocaleTimeString([], {
