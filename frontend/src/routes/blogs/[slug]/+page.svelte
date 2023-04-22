@@ -33,10 +33,10 @@
 
 <section>
   <div>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center mb-1">
       <h1 class="text-[0.89rem] text-[#5E6073] mb-2 ml-1">{article.tag}</h1>
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <img
+      <img class="h-4"
         src={!saved ? "/bookmark-checked.svg" : "/bookmark-unchecked.svg"}
         alt="Icon"
         on:click={(e) => {
@@ -45,7 +45,7 @@
       />
     </div>
 
-    <img src={article.image} alt="Article Cover" class="w-full" />
+    <img src={article.image} alt="Article Cover" class="w-full max-h-80" />
 
     <h1 class="text-[1.3rem] mt-3 ml-1">{article.title}</h1>
     <p class="mt-3 ml-1 whitespace-">{article.content}</p>

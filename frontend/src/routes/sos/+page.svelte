@@ -14,12 +14,12 @@
   {#if !viewAll}
     <LeafletMap />
   {/if}
-  <div class="flex justify-between items-center mt-5">
+  <div class="flex justify-between items-center mt-6 mb-2">
     <h2>Lost pets</h2>
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     {#if !viewAll}
       <div
-        class="border-[0.12rem] border-black rounded-[1.2rem] text-[0.8rem] p-2 px-3 flex justify-center
+        class="border-[1px] border-black rounded-[0.75rem] text-[0.8rem] p-1 px-5 flex justify-center
       items-center cursor-pointer hover:scale-98 active:scale-95 transition-all duration-200"
         on:click={() => {
           viewAll = !viewAll;
@@ -29,7 +29,7 @@
       </div>
     {/if}
   </div>
-
+  
   <!-- lost dogs -->
 
   <div class="lost-pet-list" style="height: {listHeight};">
@@ -55,9 +55,9 @@
   <!-- Submit a request -->
   <a href="/sos/request-form" data-sveltekit-noscroll>
     <div
-      class="fixed right-4 bottom-[7.5rem] py-2 px-8 rounded-[2rem] bg-[var(--color-request)] text-[var(--color-bg)] border-2 border-[var(--color-text-secondary)] text-[1.2rem] cursor-pointer hover:scale-98 active:scale-95 transition-all duration-200"
+      class="fixed right-4 bottom-[6rem] py-2 px-8 rounded-[1.5rem] bg-[var(--color-enabled)] text-[var(--color-text-primary)] border-2 border-[var(--color-text-secondary)] text-lg cursor-pointer font-medium hover:scale-98 active:scale-95 transition-all duration-200"
     >
-      +Submit a request
+      + Submit a request
     </div>
   </a>
 </section>

@@ -29,6 +29,7 @@
 <section class="VaccinePage">
     <Dropdown options={$user.pets} value={$pet} />
     <VaccineDetailCard appointment={app} {status} />
+    <br>
     <div class="HeadingLine">
         <p>{view + " appointments"}</p>
         <button
@@ -57,7 +58,7 @@
         }}
     >
         <img
-            src="/add-icon-white.png"
+            src="/add-icon.png"
             alt="Add Icon"
             class="FloatingButtonImg"
         />
@@ -78,7 +79,7 @@
         border-radius: 0.75rem;
         height: 1.5rem;
         font-size: var(--font-s);
-        width: 30%;
+        width: 25%;
     }
     .ViewList {
         display: flex;
@@ -90,15 +91,15 @@
         position: absolute;
         bottom: 6rem;
         right: 1rem;
-        background-color: var(--color-background);
+        background-color: var(--color-enabled);
         display: flex;
         justify-content: space-evenly;
         align-items: center;
         height: 3rem;
         width: 15rem;
-        color: white;
+        color: black;
         border-radius: 1.5rem;
-        border: solid 1.5px #1b1b1b;
+        border: solid 2px #1b1b1b;
         font-size: var(--font-xl);
         box-shadow: #1b1b1b 0px 1px 1px;
     }
