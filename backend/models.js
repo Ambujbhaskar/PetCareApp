@@ -82,6 +82,7 @@ const appointmentSchema = new mongoose.Schema({
 	clinic_id: ObjectId,
 	doctor_name: String,
 	completed: Boolean,
+	vaccines: [String],
 	location: locationSchema
 });
 
