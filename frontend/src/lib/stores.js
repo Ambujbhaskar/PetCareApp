@@ -2,6 +2,12 @@ import { readable, writable } from "svelte/store";
 
 export const URL = readable("http://localhost:3001/api");
 
+export const config = readable({
+  headers: {
+    Authentication: `Bearer JDR=fx?WVcvazUrFdjy1M2}Y03IH4q`,
+  },
+});
+
 export const pet = writable(0);
 
 export const user = writable({
