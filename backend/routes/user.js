@@ -1,19 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../models');
+const { User, Clinic, Pet, Appointment } = require('../models');
 
 router.get('/', async (req, res, next) => {
 	try {
 		let user = await User
 			.findById(req.user_id
-				, "-_id name email phone pets saved_articles"
-			);
+				, "-_id"
+			).lean();
 
 		if (!user) {
 			next(new Error('User not found'));
 		}
+		let numPet = 0;
+		for (let pet of user.pets) {
+			let numAppointment = 0;
+			for (let appointment of pet.appointments){
+				let clinic = await Clinic.findById(appointment.clinic_id);
+				user.pets[numPet].appointments[numAppointment]["clinic_name"] = clinic.name;	
+				numAppointment++;
+			}
+			numPet++;
+		}
 
-		res.send(user);
+		res.status(200).json(user);
 	} catch (error) {
 		next(error);
 	}

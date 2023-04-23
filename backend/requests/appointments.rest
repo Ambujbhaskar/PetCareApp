@@ -1,5 +1,5 @@
 POST http://localhost:3001/api/appointments/
-authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTkyMzE1LCJleHAiOjE2ODIxOTU5MTV9.0Xjmv2SPwM6EJws3nARspPCwExOZBpeqcnUwVzrgiGw
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMjA0MjMzLCJleHAiOjE2ODIyNDAyMzN9._t0IJt1D5_YkVzY7bKn9qzcWghnO3AP2hedLnJOs35E
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 ###
 # Update an appointment
 PATCH http://localhost:3001/api/appointments/6444325dde1c01a2838fa8bf
-authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTkyMzE1LCJleHAiOjE2ODIxOTU5MTV9.0Xjmv2SPwM6EJws3nARspPCwExOZBpeqcnUwVzrgiGw
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMjA0MjMzLCJleHAiOjE2ODIyNDAyMzN9._t0IJt1D5_YkVzY7bKn9qzcWghnO3AP2hedLnJOs35E
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 ###
 # Delete an appointment
 DELETE http://localhost:3001/api/appointments/6444325ede1c01a2838fa8c5
-authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTkyMzE1LCJleHAiOjE2ODIxOTU5MTV9.0Xjmv2SPwM6EJws3nARspPCwExOZBpeqcnUwVzrgiGw
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMjA0MjMzLCJleHAiOjE2ODIyNDAyMzN9._t0IJt1D5_YkVzY7bKn9qzcWghnO3AP2hedLnJOs35E
 Content-Type: application/json
 
 {

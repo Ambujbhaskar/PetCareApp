@@ -1,13 +1,31 @@
 <script>
   import { lostPetRequests } from "$lib/stores.js";
   import LeafletMap from "../common/LeafletMap.svelte";
+  import { URL } from "$lib/stores";
+  import axios from "axios";
+  import { onMount } from "svelte";
+
   let viewAll = false;
   let listHeight = "100%";
   $: {
     if (viewAll) listHeight = "fit-content";
     else listHeight = "30rem";
   }
-  export let data;
+
+  onMount(async () => {
+    await axios
+      .get($URL + "/pets", {
+        headers: {
+          authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 </script>
 
 <section class="ml-1 flex flex-col transition-all duration-200 overflow-hidden">
@@ -29,7 +47,7 @@
       </div>
     {/if}
   </div>
-  
+
   <!-- lost dogs -->
 
   <div class="lost-pet-list" style="height: {listHeight};">

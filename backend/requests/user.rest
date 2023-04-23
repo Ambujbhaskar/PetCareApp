@@ -1,5 +1,5 @@
 GET http://localhost:3001/api/user/
-authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTczNjExLCJleHAiOjE2ODIxNzcyMTF9.kDa8C3CnWQlrJwll4HZvUZGdZgo1CfWs1kTSiTOypOw
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMjEyNzg0LCJleHAiOjE2ODIyNDg3ODR9.VRl1wncd8wsE77BTo8tEbDo_7YMud6VG811VVKluJck
 
 ###
 PATCH http://localhost:3001/api/user/

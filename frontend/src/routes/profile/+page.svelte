@@ -1,33 +1,63 @@
 <script>
-	import { user, URL } from "$lib/stores.js";
+	import { URL } from "$lib/stores.js";
 	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
 	import axios from "axios";
 
+	let data = {
+		name: "",
+		email: "",
+		phone: "",
+		pets: [],
+		saved_articles: [],
+		lostPetRequests: [],
+	};
+
 	onMount(async () => {
-		axios.get($URL + "/user", {
-			headers: {
-				'authentication': `Bearer ${sessionStorage.getItem("user-token")}`
-			}
-		}).then(data => {
-			console.log("res", data);
-		}).catch(err => {
+		try {
+			let result = await axios.get($URL + "/user", {
+				headers: {
+					authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+				},
+			});
+			data = result.data;
+			data["lostPetRequests"] = []
+			data["lostPetRequests"] = (await axios.get($URL + "/requests/user", {
+				headers: {
+					authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+				},
+			})).data;
+			console.log(data);
+		} catch (err) {
 			console.log(err);
-		});
+		}
 	});
 
-	let data = $user;
 	let editing = false;
 	let userInfoClass = "user-info";
-	$: $user["email"] = data["email"];
-	$: $user["phone"] = data["phone"];
 
-	function toggleEdit() {
+	async function toggleEdit() {
 		editing = !editing;
 		if (editing) {
 			userInfoClass = "user-info-editing";
 		} else {
 			userInfoClass = "user-info";
+			try {
+				await axios.patch(
+					$URL + "/user",
+					{
+						email: data["email"],
+						phone: data["phone"],
+					},
+					{
+						headers: {
+							authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+						},
+					}
+				);
+			} catch (err) {
+				console.log(err);
+			}
 		}
 	}
 </script>
@@ -73,10 +103,10 @@
 			{#each data["pets"] as pet}
 				<button
 					class="pet-card"
-					on:click={() => goto("/profile/" + pet["name"])}
+					on:click={() => goto("/profile/" + pet["_id"])}
 				>
 					<img
-						src={pet["src"]}
+						src={pet["image_uri"]}
 						class="pet-image"
 						alt="photo of {pet['name']}"
 					/>
@@ -101,13 +131,13 @@
 			{#each data["lostPetRequests"] as pet}
 				<div class="lost-pet-card">
 					<img
-						src={pet["imgSrc"]}
+						src={pet["image_uri"]}
 						class="lost-pet-image"
 						alt="photo of {pet['name']}"
 					/>
 					<div>
 						<p class="lost-pet-name">Name - {pet["name"]}</p>
-						<p>Last seen - {pet["lastSeen"]}</p>
+						<p>Last seen - {pet["last_seen"]}</p>
 						<br />
 						<p class="lost-pet-contact">
 							Contact - {pet["contact"]}

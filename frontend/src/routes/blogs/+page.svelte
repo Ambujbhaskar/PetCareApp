@@ -1,7 +1,10 @@
 <script>
   import Article from "../common/Article.svelte";
-  import articles from "$lib/data/articles.json";
+  // import articles from "$lib/data/articles.json";
   import { user } from "$lib/stores.js";
+  import { URL } from "$lib/stores";
+  import axios from "axios";
+  import { onMount } from "svelte";
 
   let searchTerm = "";
   let selectedProfile = 0;
@@ -15,7 +18,8 @@
     { name: "VETS", active: false },
     { name: "VACCINATION", active: false },
   ];
-  let allArticles = articles;
+  let articles = [];
+  let allArticles = [];
   let userSavedData = $user.savedArticles;
 
   function searchArticles() {
@@ -69,6 +73,23 @@
     });
   }
 
+  onMount(async () => {
+    await axios
+      .get($URL + "/articles", {
+        headers: {
+          authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        articles = res.data;
+        bookmark_articles();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
   $: bookmark_articles();
 </script>
 
@@ -106,7 +127,19 @@
             />
             View Bookmarks
           </div>
-          {#if bookMarked}
+          {#if bookMarked}{#each allArticles as { _id, tag, title, content, image_uri }, i}
+              <a href={`/blogs/${_id}`} data-sveltekit-noscroll>
+                <Article
+                  {_id}
+                  type={tag}
+                  {title}
+                  body={content}
+                  src={image_uri}
+                  saved={$user.savedArticles.filter((a) => a == _id).length !=
+                    0}
+                />
+              </a>
+            {/each}
             <img
               src={bookMarked && "./delete-bmk.svg"}
               alt="Icon"
@@ -196,15 +229,15 @@
           <img src="./empty_articles.png" alt="No Articles" />
         </div>
       {:else}
-        {#each allArticles as { id, tag, title, content, image }, i}
-          <a href={`/blogs/${id}`} data-sveltekit-noscroll>
+        {#each allArticles as { _id, tag, title, content, image_uri }, i}
+          <a href={`/blogs/${_id}`} data-sveltekit-noscroll>
             <Article
-              {id}
+              id={_id}
               type={tag}
               {title}
               body={content}
-              src={image}
-              saved={$user.savedArticles.filter((a) => a == id).length != 0}
+              src={image_uri}
+              saved={$user.savedArticles.filter((a) => a == _id).length != 0}
             />
           </a>
         {/each}
