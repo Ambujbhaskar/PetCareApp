@@ -14,11 +14,15 @@
 
   onMount(async () => {
     await axios
-      .get($URL + "/requests", {
-        headers: {
-          authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
-        },
-      })
+      .get(
+        $URL + "/requests",
+
+        {
+          headers: {
+            authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(res.data);
         lostPetRequests = res.data;

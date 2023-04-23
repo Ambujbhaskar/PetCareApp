@@ -5,7 +5,7 @@
   import { URL } from "$lib/stores";
   import axios from "axios";
   import { onMount } from "svelte";
-
+  let users = [];
   let searchTerm = "";
   let selectedProfile = 0;
   let saved;
@@ -20,14 +20,14 @@
   ];
   let articles = [];
   let allArticles = [];
-  let userSavedData = $user.savedArticles;
+  let userSavedData = [];
 
   function searchArticles() {
     let Index = tabs.findIndex((tab) => tab.active);
     allArticles = articles.filter((article) => {
       if (bookMarked) {
         return (
-          userSavedData.includes(parseInt(article["id"])) &&
+          userSavedData.includes(parseInt(article._id)) &&
           (article["title"].toUpperCase().includes(searchTerm.toUpperCase()) ||
             article["content"]
               .toUpperCase()
@@ -50,7 +50,7 @@
     allArticles = articles.filter((article) => {
       if (bookMarked) {
         return (
-          userSavedData.includes(parseInt(article["id"])) &&
+          userSavedData.includes(parseInt(article._id)) &&
           article["tag"].toUpperCase() === tabs[index].name
         );
       }
@@ -58,13 +58,13 @@
     });
   }
 
-  function bookmark_articles() {
+  async function bookmark_articles() {
     let Index = tabs.findIndex((tab) => tab.active);
 
     allArticles = articles.filter((article) => {
       if (bookMarked) {
         return (
-          userSavedData.includes(parseInt(article["id"])) &&
+          userSavedData.includes(parseInt(article._id)) &&
           article["tag"].toUpperCase() === tabs[Index].name
         );
       }
@@ -84,6 +84,22 @@
         console.log(res.data);
         articles = res.data;
         bookmark_articles();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+  onMount(async () => {
+    await axios
+      .get($URL + "/user/", {
+        headers: {
+          authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        users = res.data;
+        userSavedData = users.saved_articles;
       })
       .catch((err) => {
         console.log(err);
@@ -237,7 +253,7 @@
               {title}
               body={content}
               src={image_uri}
-              saved={$user.savedArticles.filter((a) => a == _id).length != 0}
+              saved={userSavedData.filter((a) => a == _id).length != 0}
             />
           </a>
         {/each}

@@ -16,24 +16,51 @@
     image_uri: "",
   };
 
-  function unsaveArticle(articleId) {
-    user.update((u) => {
-      let newUser = { ...u };
-      let newSavedArticles = u.savedArticles.filter((id) => id !== articleId);
-      newUser.savedArticles = newSavedArticles;
-      return newUser;
-    });
+  async function unsaveArticle(articleId) {
+    axios
+      .delete(
+        $URL + "/articles/" + id,
+        {},
+        {
+          headers: {
+            authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    saved = !saved;
   }
 
-  function toggleArticleSave(event, id) {
+  async function toggleArticleSave(event, id) {
     event.preventDefault();
-
-    if ($user.savedArticles.includes(parseInt(id))) {
-      unsaveArticle(parseInt(id));
-      saved = !saved;
+    if (saved) {
+      unsaveArticle(id);
       return;
     }
-    $user.savedArticles.push(parseInt(id));
+    axios
+      .post(
+        $URL + "/articles/" + id,
+        {},
+        {
+          headers: {
+            authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     saved = !saved;
   }
 

@@ -1,5 +1,8 @@
 <script>
   import { user } from "$lib/stores.js";
+  import { URL } from "$lib/stores";
+  import axios from "axios";
+  import { onMount } from "svelte";
   export let id;
   export let type;
   export let title;
@@ -7,23 +10,52 @@
   export let src;
   export let saved;
 
-  function unsaveArticle(articleId) {
-    user.update((u) => {
-      let newUser = { ...u };
-      let newSavedArticles = u.savedArticles.filter((id) => id !== articleId);
-      newUser.savedArticles = newSavedArticles;
-      return newUser;
-    });
+  async function unsaveArticle(articleId) {
+    axios
+      .delete(
+        $URL + "/articles/" + id,
+        {},
+        {
+          headers: {
+            authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    saved = !saved;
   }
 
-  function toggleArticleSave(event) {
-    event.preventDefault();
-    if ($user.savedArticles.includes(parseInt(id))) {
-      unsaveArticle(parseInt(id));
-      saved = !saved;
+  async function toggleArticleSave(event) {
+    if (saved) {
+      unsaveArticle(id);
       return;
     }
-    $user.savedArticles.push(parseInt(id));
+    event.preventDefault();
+    console.log(id);
+    axios
+      .post(
+        $URL + "/articles/" + id,
+        {},
+        {
+          headers: {
+            authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     saved = !saved;
   }
 </script>

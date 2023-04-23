@@ -20,6 +20,7 @@ router.post("/:id", async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    console.log(user);
 
     const savedArticles = user.saved_articles;
     if (savedArticles.includes(articleId)) {
