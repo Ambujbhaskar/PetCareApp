@@ -1,21 +1,31 @@
 <script>
-    import {pet} from "$lib/stores.js";
+    import { pet, user } from "$lib/stores.js";
     export let value;
     export let key;
     export let isDropdownActive;
     export let options;
 
-    $: option = options[key];
+    $: option =
+        options.filter((option) => option.id == key)[0] ||
+        {name: "", image_uri: ""};
+    // $: console.log("OPTION", option);
 
     function selectOption() {
         value = key;
-        pet.set(key)
+        pet.set(key);
     }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class={(value==key)?(isDropdownActive?"Default NoPadding":"Default IdleColor NoPadding"):"Default"} on:click={selectOption}>
-    <img src={option.src} alt={option.name + "'s picture"} class="RoundImg" />
+<div
+    class={(value == key || value == 0)
+        ? isDropdownActive
+            ? "Default NoPadding"
+            : "Default IdleColor NoPadding"
+        : "Default"}
+    on:click={selectOption}
+>
+    <img src={option.image_uri} alt={option.name + "'s picture"} class="RoundImg" />
     <p>{option.name}</p>
 </div>
 

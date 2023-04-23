@@ -1,31 +1,58 @@
 <script>
-	import { user } from "$lib/stores.js";
-	import { pet } from "$lib/stores.js";
+	import { user, pet, URL } from "$lib/stores.js";
+	import axios from "axios";
+	import { onMount } from "svelte";
 	import { goto } from "$app/navigation";
-	// components
+
 	import Dropdown from "./common/Dropdown.svelte";
 	import VaccineCard from "./common/VaccineCard.svelte";
 	import SuggestedArticles from "./common/SuggestedArticles.svelte";
-
-	// function
 	import { getAppointmentStatus } from "./common/util.js";
 
 	/*
+		Fetch Pets list
 		Fetch Appointments 
-		Fetch Articles
 		Fetch Saved Articles for the user
+		Fetch Articles
 	*/
+	let userObject = {};
+	let petsArr = [];
+	let petObj = {};
+	let petApts = [];
+	let articles = [];
 
-	$: apts = $user.pets[$pet].appointments;
-	$: nextAppointment = apts.reduce((acc, curr) => {
-		const status = getAppointmentStatus(curr, apts);
-		// console.log("S", status);
+	onMount(async () => {
+		await axios
+			.get($URL + "/user", {
+				headers: {
+					authentication: `Bearer ${sessionStorage.getItem(
+						"user-token"
+					)}`,
+				},
+			})
+			.then((res) => {
+				console.log("res", res);
+				userObject = res.data;
+				petsArr = userObject.pets;
+				petObj = petsArr[0];
+				petApts = petObj.appointments;
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	});
+
+	$: console.log("USEROBJ", userObject);
+
+	$: nextPetAppointment = petApts.reduce((acc, curr) => {
+		const status = getAppointmentStatus(curr, petApts);
 		if (status == "Next") {
 			acc = curr;
 		}
 		return acc;
 	}, null);
-	// $: console.log(nextAppointment);
+
+	$: console.log("NEXT", nextPetAppointment);
 </script>
 
 <svelte:head>
@@ -34,11 +61,11 @@
 </svelte:head>
 
 <section>
-	<Dropdown options={$user.pets} value={$pet} />
+	<Dropdown options={petsArr} value={$pet} />
 	<div class="Appointment">
 		<h4>Next Vaccine Appointment</h4>
-		{#if nextAppointment != null}
-			<VaccineCard appointment={nextAppointment} status={"Next"} />
+		{#if nextPetAppointment != null}
+			<VaccineCard appointment={nextPetAppointment} status={"Next"} />
 		{:else}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<div
