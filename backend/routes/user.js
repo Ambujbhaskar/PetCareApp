@@ -14,7 +14,6 @@ router.get('/', async (req, res, next) => {
 		}
 		let numPet = 0;
 		for (let pet of user.pets) {
-			let petId = pet._id;
 			let numAppointment = 0;
 			for (let appointment of pet.appointments){
 				let clinic = await Clinic.findById(appointment.clinic_id);

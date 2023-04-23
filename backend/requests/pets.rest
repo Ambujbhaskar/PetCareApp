@@ -1,3 +1,7 @@
+GET http://localhost:3001/api/pets/64441dfa9ef3ea504adbfdb6
+authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMjA0MjMzLCJleHAiOjE2ODIyNDAyMzN9._t0IJt1D5_YkVzY7bKn9qzcWghnO3AP2hedLnJOs35E
+
+###
 POST http://localhost:3001/api/pets
 Content-Type: application/json
 authentication: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjQ0M2VlYWExODU0OTFmMTlmYTZkNTRmIiwiaWF0IjoxNjgyMTg0NjE2LCJleHAiOjE2ODIxODgyMTZ9.L3KbOUpJ__VJ-2B4tGrk9wTmjppcuRduF6N2fLdBTIM

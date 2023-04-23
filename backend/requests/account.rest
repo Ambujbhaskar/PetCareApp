@@ -23,7 +23,7 @@ POST http://localhost:3001/api/account/login
 content-Type: application/json
 
 {
-    "email": "newmail@example.com",
+    "email": "newmail@iiitd.ac.in",
     "password": "password123"
 }
 

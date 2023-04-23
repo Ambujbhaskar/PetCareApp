@@ -1,49 +1,82 @@
 <script>
-	import {user} from '$lib/stores.js'
+	import {URL} from '$lib/stores.js'
+	import { onMount } from "svelte";
+	import axios from "axios";
+
 	export let data;
 	let editing = false;
-	let pet = $user["pets"].filter(pet => pet["name"] === data.petName)[0];
+	let pet = {
+		name: '',
+		dob: '1 jan 2001',
+		species: '',
+		weight: '',
+		breed: '',
+		bloodGroup: '',
+		notes: '',
+		image_uri: ''
+	};
 	let petInfoClass = "pet-medical-info"
-	
-	$: $user["pets"]
-	.filter(pet => pet["name"] === data.petName)[0]["weight"] 
-	= pet['weight'];
-	$: $user["pets"]
-	.filter(pet => pet["name"] === data.petName)[0]["bloodGroup"] 
-	= pet['bloodGroup'];
-	$: $user["pets"]
-	.filter(pet => pet["name"] === data.petName)[0]["notes"] 
-	= pet['notes'];
-	
-	let dob = new Date(pet["dob"]);
-	let currDate = new Date();
-	let age = Math.ceil(Math.abs(currDate - dob) / (1000 * 60 * 60 * 24));
-	let ageUnit = "Days"
-	if (age > 30) {
-		age = Math.ceil(age / 30.5);
-		ageUnit = "Months"
-	}
-	console.log(age, ageUnit);
-	if (age > 12) {
-		age = Math.ceil(age / 12);
-		ageUnit = "Years"
-	}
-	console.log(age, ageUnit);
 
-	function toggleEdit() {
+	onMount(async () => {
+		try {
+			let result = await axios.get($URL + "/pets/" + data.petName, {
+				headers: {
+					authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+				},
+			});
+			pet = result.data;
+			console.log(pet);
+		} catch (err) {
+			console.log(err);
+		}
+	});
+	
+	let ageUnit = "Days"
+	let currDate = new Date();
+	$: dob = new Date(pet["dob"]);
+	$: age = Math.ceil(Math.abs(currDate - dob) / (1000 * 60 * 60 * 24));
+	$: {
+		if (age > 30) {
+			age = Math.ceil(age / 30.5);
+			ageUnit = "Months"
+		}
+		if (age > 12) {
+			age = Math.ceil(age / 12);
+			ageUnit = "Years"
+		}
+	}
+
+	async function toggleEdit() {
 		editing = !editing;
 		if (editing) {
 			petInfoClass = "pet-medical-info-editing";
 		}
 		else {
 			petInfoClass = "pet-medical-info";
+			try {
+				await axios.patch(
+					$URL + "/pets/" + data.petName,
+					{
+						weight: pet["weight"],
+						bloodGroup: pet["bloodGroup"],
+						notes: pet["notes"]
+					},
+					{
+						headers: {
+							authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+						},
+					}
+				);
+			} catch (err) {
+				console.log(err);
+			}
 		}
 	}
 </script>
 
 <div class="pet-profile-body">
 	<div class="pet-profile">
-		<img src={pet['src']} alt="image of {pet['name']}"/>
+		<img src={pet['image_uri']} alt="image of {pet['name']}"/>
 		{pet['name']}
 	</div>	
 

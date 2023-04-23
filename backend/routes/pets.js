@@ -2,16 +2,72 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
-const { User, Pet } = require("../models");
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+const fs = require('fs');
+const { User, Pet } = require('../models');
 
-router.get("/", async (req, res, next) => {
-  try {
-    console.log(Pet);
-    const pets = await Pet.find({});
-    res.status(200).json(pets);
-  } catch (err) {
-    next(err);
-  }
+router.get('/:petId', async (req, res, next) => {
+	try {
+		let user = await User.findById(req.user_id);
+		if (!user) {
+			res.status(400).json({message: 'User not found'});
+		}
+		const pet = user.pets.id(req.params.petId);
+		if (!pet) {
+			res.status(400).json({message: 'Pet not found'});
+		}
+		res.status(200).json(pet);
+	} catch (err) {
+		next(err);
+	}
+});
+
+router.post('/', upload.single('image_uri'), async (req, res, next) => {
+  const buffer = fs.readFileSync(req.file.path);
+  const image_uri = `data:${req.file.mimetype};base64,${buffer.toString('base64')}`;
+  await fs.promises.unlink(req.file.path);
+
+	const { name, dob, species, weight, breed, bloodGroup, notes } = req.body;
+	const userId = req.user_id;
+
+	try {
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).send('User not found');
+		}
+
+		if (
+			!name ||
+			!dob ||
+			!species ||
+			!weight ||
+			!breed ||
+			!bloodGroup ||
+			!notes ||
+			!image_uri
+		)
+			return res.status(400).json({message: "malformed request"});
+
+		const pet = new Pet({
+			_id: new mongoose.Types.ObjectId(),
+			name,
+			dob,
+			species,
+			weight,
+			breed,
+			bloodGroup,
+			notes,
+			image_uri,
+		});
+
+		user.pets.push(pet);
+
+		await user.save();
+		return res.status(201).json(pet);
+	} catch (err) {
+		next(err);
+	}
 });
 
 router.post("/", async (req, res, next) => {

@@ -1,78 +1,89 @@
 <script>
-	import {user} from "$lib/stores.js"
-	import {goto} from '$app/navigation'
+	import { URL } from "$lib/stores.js";
+	import { goto } from "$app/navigation";
+	import axios from "axios";
 
 	let months = [
-		'january', 
-		'february', 
-		'march', 
-		'april', 
-		'may', 
-		'june', 
-		'july', 
-		'august', 
-		'september', 
-		'october', 
-		'november', 
-		'december'
-	]
+		"january",
+		"february",
+		"march",
+		"april",
+		"may",
+		"june",
+		"july",
+		"august",
+		"september",
+		"october",
+		"november",
+		"december",
+	];
 	let bloodGroups = {
-		dog: ['dea-1.1', 'dea-1.2', 'dea-3', 'dea-4', 'dea-5', 'dea-7'],
-		cat: ['a', 'b', 'ab'],
-		rabbit: ['a', 'b',  'ab', 'o']
-	}
-
+		dog: ["dea-1.1", "dea-1.2", "dea-3", "dea-4", "dea-5", "dea-7"],
+		cat: ["a", "b", "ab"],
+		rabbit: ["a", "b", "ab", "o"],
+	};
+	let uploadedImage = "";
 	let uploadLabel = "image-upload";
 	let date = ["", "", ""];
-	let petState =
-	{ 
-		id: $user['pets'].length + 1,
+	let petState = {
 		name: "",
 		species: "dog",
 		breed: "",
 		dob: "",
 		bloodGroup: "",
 		notes: "",
-		src: "",
-		appointments: []
-	}
+		image_uri: ""
+	};
 	$: petState["dob"] = date.join(" ");
 
-	function setUploadedImage(event){
-		if (!event.target.files[0])
-			return;
+	function setUploadedImage(event) {
+		if (!event.target.files[0]) return;
+		petState["image_uri"] = event.target.files[0];
 		let reader = new FileReader();
-		reader.onload = function(event) {
-			petState["src"] = event.target.result;
+		reader.onload = function (event) {
+			uploadedImage = event.target.result;
 			uploadLabel = "";
 		};
 		reader.readAsDataURL(event.target.files[0]);
 	}
-	function clearUploadedImage(){
-		petState["src"] = "";
+	function clearUploadedImage() {
+		uploadedImage = "";
+		petState["image_uri"] = "";
 		uploadLabel = "image-upload";
 	}
-	function validateFields(){
+	async function validateFields() {
 		let valid = true;
-		let month = document.getElementById('dob-month');
+		let month = document.getElementById("dob-month");
+		let day = document.getElementById("dob-day");
 		valid &= months.includes(month.value.toLowerCase());
 		if (!valid) {
 			month.setCustomValidity("Please enter a valid month");
 		}
-		let bloodGroup = document.getElementById('blood-group');
-		valid &= bloodGroups[petState['species']].includes(bloodGroup.value.toLowerCase());
+		try {
+			const date = new Date(petState["dob"]);
+			petState["dob"] = date.toDateString();
+		} catch (err) {
+			day.setCustomValidity("Please enter a valid date");
+		}
+
+		let bloodGroup = document.getElementById("blood-group");
+		valid &= bloodGroups[petState["species"]].includes(
+			bloodGroup.value.toLowerCase()
+		);
 		if (!valid) {
 			bloodGroup.setCustomValidity("Please enter a valid blood group");
 		}
 		return valid;
 	}
-	function handleSubmit() {
-		if (validateFields()){
-			/*
-				PUT request to create new pet 
-			*/
-			$user["pets"].push(petState);
-			goto('/profile');
+	async function handleSubmit() {
+		if (await validateFields()) {
+			await axios.postForm($URL + "/pets", petState, {
+				headers: {
+					authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
+					"Content-Type": "multipart/form-data",
+				},
+			});
+			goto("/profile");
 		}
 	}
 </script>
@@ -82,70 +93,138 @@
 		<h4>Add Pet</h4>
 		<img src="/add-pet-illustration.svg" alt="Add vaccine schedule" />
 	</div>
-	<br/>
+	<br />
 	<form on:submit|preventDefault={handleSubmit}>
 		<h1>Name</h1>
-		<input required bind:value={petState["name"]} type="text" placeholder="ENTER THE NAME OF THE PET"/>
+		<input
+			required
+			bind:value={petState["name"]}
+			type="text"
+			placeholder="ENTER THE NAME OF THE PET"
+		/>
 		<h1>Species</h1>
 		<div>
-			<input required bind:group={petState["species"]} type="radio" id="dog" name="species" value="dog"/>
+			<input
+				required
+				bind:group={petState["species"]}
+				type="radio"
+				id="dog"
+				name="species"
+				value="dog"
+			/>
 			<label for="dog">DOG</label>
-			<input required bind:group={petState["species"]} type="radio" id="cat" name="species" value="cat"/>
+			<input
+				required
+				bind:group={petState["species"]}
+				type="radio"
+				id="cat"
+				name="species"
+				value="cat"
+			/>
 			<label for="cat">CAT</label>
-			<input required bind:group={petState["species"]} type="radio" id="rabbit" name="species" value="rabbit"/>
+			<input
+				required
+				bind:group={petState["species"]}
+				type="radio"
+				id="rabbit"
+				name="species"
+				value="rabbit"
+			/>
 			<label for="rabbit">RABBIT</label>
 		</div>
-		
-		<h1>Breed</h1>
-		<input required bind:value={petState["breed"]} type="text" placeholder="ENTER THE BREED"/>
 
-		<h1>Date of birth</h1>	
+		<h1>Breed</h1>
+		<input
+			required
+			bind:value={petState["breed"]}
+			type="text"
+			placeholder="ENTER THE BREED"
+		/>
+
+		<h1>Date of birth</h1>
 		<div>
-			<input min='0' required bind:value={date[0]} type="number" placeholder="DAY"/>
-			<input 
-				required 
-				bind:value={date[1]} 
-				on:invalid={event => event.target.setCustomValidity("Please enter a valid month")} 
-				on:input={event => event.target.setCustomValidity("")}
+			<input
+				min="0"
+				required
+				bind:value={date[0]}
+				type="number"
+				placeholder="DAY"
+			/>
+			<input
+				required
+				bind:value={date[1]}
+				on:invalid={(event) =>
+					event.target.setCustomValidity("Please enter a valid month")}
+				on:input={(event) => event.target.setCustomValidity("")}
 				id="dob-month"
-				type="text" 
+				type="text"
 				placeholder="MONTH"
 			/>
-			<input min='1950' max={(new Date()).getFullYear()} required bind:value={date[2]} type="number" placeholder="YEAR"/>
+			<input
+				min="1950"
+				max={new Date().getFullYear()}
+				required
+				bind:value={date[2]}
+				type="number"
+				placeholder="YEAR"
+			/>
 		</div>
-		
+
 		<h1>Weight</h1>
 		<div>
-			<input min="1" max="1000" required bind:value={petState["weight"]} class="weight-input" type="number" placeholder="ENTER THE WEIGHT OF THE PET"/>
+			<input
+				min="1"
+				max="1000"
+				required
+				bind:value={petState["weight"]}
+				class="weight-input"
+				type="number"
+				placeholder="ENTER THE WEIGHT OF THE PET"
+			/>
 			<span class="weight-unit">KG</span>
 		</div>
-		
+
 		<h1>Blood group</h1>
-		<input 
-			required 
-			id="blood-group" 
-			bind:value={petState["bloodGroup"]} 
-			on:invalid={event => event.target.setCustomValidity("Please enter a valid blood group")} 
-			on:input={event => event.target.setCustomValidity("")}
-			type="text" 
+		<input
+			required
+			id="blood-group"
+			bind:value={petState["bloodGroup"]}
+			on:invalid={(event) =>
+				event.target.setCustomValidity("Please enter a valid blood group")}
+			on:input={(event) => event.target.setCustomValidity("")}
+			type="text"
 			placeholder="ENTER THE BLOOD GROUP"
 		/>
-		
+
 		<h1>Notes</h1>
-		<input required bind:value={petState["notes"]} type="text" placeholder="ENTER ANY MEDICAL CONDITIONS"/>
+		<input
+			required
+			bind:value={petState["notes"]}
+			type="text"
+			placeholder="ENTER ANY MEDICAL CONDITIONS"
+		/>
 
 		<h1>Upload a picture</h1>
-		<input type="file" id="image-upload" accept="image/png, image/jpeg" on:input={event => setUploadedImage(event)}/>
+		<input
+			type="file"
+			id="image-upload"
+			accept="image/png, image/jpeg"
+			on:input={(event) => setUploadedImage(event)}
+		/>
 		<label for={uploadLabel} class="upload-button" id="image-upload-label">
-			{#if petState["src"] != ""}
-				<img src={petState["src"]} alt="uploaded"/>
-				<button style="background: none;" on:click|preventDefault={clearUploadedImage}><img src="/cross.svg" alt="cross">Remove</button>
+			{#if uploadedImage != ""}
+				<img src={uploadedImage} alt="uploaded" />
+				<button
+					style="background: none;"
+					on:click|preventDefault={clearUploadedImage}
+					><img src="/cross.svg" alt="cross" />Remove</button
+				>
 			{:else}
-				<img src="/upload.svg" alt="upload icon"/>
+				<img src="/upload.svg" alt="upload icon" />
 				Upload
 			{/if}
 		</label>
-		<button type="submit"><img src="/done.svg" alt="edit"/>Done</button>
+		<button type="submit"><img src="/done.svg" alt="edit" />Done</button>
 	</form>
 </div>
 
@@ -169,7 +248,7 @@
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
-	.add-pet-form::-webkit-scrollbar{
+	.add-pet-form::-webkit-scrollbar {
 		display: none;
 	}
 	form {
@@ -196,7 +275,8 @@
 		text-align: center;
 		font-size: 12px;
 	}
-	form input[type="text"], form input[type="number"] {
+	form input[type="text"],
+	form input[type="number"] {
 		border-radius: var(--radius-medium);
 		border-color: var(--color-text-primary);
 		border-width: 2px;
@@ -206,9 +286,10 @@
 		font-family: var(--font-heading);
 		color: var(--color-text-primary);
 	}
-	form input[type="text"]::placeholder, form input[type="number"]::placeholder {
+	form input[type="text"]::placeholder,
+	form input[type="number"]::placeholder {
 		font-size: var(--font-xs);
-		color: var(--color-text-secondary);	
+		color: var(--color-text-secondary);
 	}
 	form div {
 		display: flex;
@@ -229,7 +310,7 @@
 	}
 	form input[type="file"] {
 		display: none;
-	} 
+	}
 	.upload-button {
 		display: flex;
 		justify-content: center;
@@ -237,7 +318,7 @@
 		flex-basis: 13rem;
 		flex-direction: column;
 		gap: 0.3rem;
-		border-radius:  var(--radius-medium);
+		border-radius: var(--radius-medium);
 		border-width: 2px;
 		border-color: var(--color-text-primary);
 		font-size: var(--font-m);
@@ -248,7 +329,7 @@
 		justify-content: center;
 		align-items: center;
 		gap: 0.3rem;
-		border-radius:  20px;
+		border-radius: 20px;
 		border-width: 2px;
 		border-color: var(--color-text-primary);
 		padding: 0.2rem 0rem;
