@@ -44,8 +44,9 @@
             .catch((err) => console.log(err));
     }
 
-    petObj = petsArr.filter((p) => p._id == $pet)?.[0] || { appointments: [] };
-    petApts = petObj.appointments;
+    $: petObj = petsArr.filter((p) => p._id == $pet)?.[0] || { appointments: [] };
+    $: petApts = petObj.appointments;
+	$: $pet = petsArr[0] && $pet == 0 ? petsArr[0]._id : $pet;
 
     $: appointment = petApts.filter((a) => a._id == data.id)[0] || {
         date_time: "",
@@ -210,6 +211,7 @@
             temp.id = data.id;
 
             let req = {
+                petId: $pet,
                 completed: false,
                 date_time: temp.dateTime,
                 doctor_name: temp.doctor,

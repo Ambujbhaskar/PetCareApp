@@ -6,6 +6,7 @@
     import { onMount } from "svelte";
     let userObject = {};
     let petsArr = [];
+
     onMount(async () => {
         await axios
             .get($URL + "/user", {
@@ -18,6 +19,25 @@
             .then((res) => {
                 userObject = res.data;
                 petsArr = userObject.pets;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
+
+    let clinics = [];
+    onMount(async () => {
+        await axios
+            .get($URL + "/clinics", {
+                headers: {
+                    authentication: `Bearer ${sessionStorage.getItem(
+                        "user-token"
+                    )}`,
+                },
+            })
+            .then((res) => {
+                clinics = res.data;
+                console.log("CLINICS", clinics);
             })
             .catch((err) => {
                 console.log(err);
@@ -180,12 +200,18 @@
             delete temp.date;
             temp.completed = false;
 
+            let clinicID = clinics?.filter(cli => cli.name == temp.clinic)[0]._id;
+            if (!clinicID){
+                console.log("CANNOT CREATE APPOINTMENT WITH UNAFFILIATED CLINIC")
+                return;
+            }
             let req = {
+                petId: $pet,
                 completed: false,
                 date_time: temp.dateTime,
                 doctor_name: temp.doctor,
-                location: { ...temp.location },
-                clinic_name: temp.clinic,
+                clinic_id: clinicID,
+                vaccines: temp.vaccines
             };
             console.log("Adding to vaccine db:", req);
 
