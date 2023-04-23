@@ -1,10 +1,10 @@
 <script>
-  import { lostPetRequests } from "$lib/stores.js";
   import LeafletMap from "../common/LeafletMap.svelte";
   import { URL } from "$lib/stores";
   import axios from "axios";
   import { onMount } from "svelte";
 
+  let lostPetRequests = [];
   let viewAll = false;
   let listHeight = "100%";
   $: {
@@ -14,13 +14,14 @@
 
   onMount(async () => {
     await axios
-      .get($URL + "/pets", {
+      .get($URL + "/requests", {
         headers: {
           authentication: `Bearer ${sessionStorage.getItem("user-token")}`,
         },
       })
       .then((res) => {
         console.log(res.data);
+        lostPetRequests = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -51,17 +52,17 @@
   <!-- lost dogs -->
 
   <div class="lost-pet-list" style="height: {listHeight};">
-    {#each $lostPetRequests as pet, i}
-      <a href={`/sos/${pet.id}`} data-sveltekit-noscroll class="w-full">
+    {#each lostPetRequests as pet, i}
+      <a href={`/sos/${pet._id}`} data-sveltekit-noscroll class="w-full">
         <div class="lost-pet-card">
           <img
-            src={pet["imgSrc"]}
+            src={pet["image_uri"]}
             class="lost-pet-image"
             alt="photo of {pet['name']}"
           />
           <div>
             <p class="lost-pet-name">Name - {pet["name"]}</p>
-            <p>Last seen - {pet["lastSeen"]}</p>
+            <p>Last seen - {pet["last_seen"]}</p>
             <br />
             <p class="lost-pet-contact">Contact - {pet["contact"]}</p>
           </div>

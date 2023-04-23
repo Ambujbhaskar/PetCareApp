@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {Article, User} = require('../models');
+const { Article, User } = require("../models");
 
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const articles = await Article.find({});
     res.status(200).json(articles);
@@ -11,19 +11,19 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/:id', async (req, res, next) => {
+router.post("/:id", async (req, res, next) => {
   const articleId = req.params.id;
   const userId = req.user_id;
-
+  console.log(articleId, userId);
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const savedArticles = user.saved_articles;
     if (savedArticles.includes(articleId)) {
-      return res.status(400).json({ message: 'Article already saved' });
+      return res.status(400).json({ message: "Article already saved" });
     }
 
     savedArticles.push(articleId);
@@ -35,20 +35,20 @@ router.post('/:id', async (req, res, next) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const articleId = req.params.id;
   const userId = req.user_id;
 
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const savedArticles = user.saved_articles;
     const articleIndex = savedArticles.indexOf(articleId);
     if (articleIndex === -1) {
-      return res.status(400).json({ message: 'Article not saved' });
+      return res.status(400).json({ message: "Article not saved" });
     }
 
     savedArticles.splice(articleIndex, 1);
