@@ -16,7 +16,7 @@
 			})
 			.then((res) => {
 				articles = res.data;
-				console.log("ARTICLES", res.data);
+				// console.log("ARTICLES", res.data);
 			})
 			.catch((err) => {
 				console.log(err);

@@ -1,6 +1,7 @@
 <script>
     import { goto } from "$app/navigation";
     import { pet, user, URL } from "$lib/stores.js";
+    import axios from "axios";
 
     import VaccineDetailCard from "../VaccineDetailCard.svelte";
     import VaccineCard from "../../common/VaccineCard.svelte";
@@ -11,38 +12,39 @@
 
     /** @type {import('./$types').PageData} */
     export let data;
-    
-	let userObject = {};
-	let petsArr = [];
-	let petObj = {};
-	let petApts = [];
-    onMount(async () => {
-		await axios
-			.get($URL + "/user", {
-				headers: {
-					authentication: `Bearer ${sessionStorage.getItem(
-						"user-token"
-					)}`,
-				},
-			})
-			.then((res) => {
-				userObject = res.data;
-				petsArr = userObject.pets;
-				petObj = petsArr[0];
-				petApts = petObj.appointments;
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	});
-	petObj = petsArr.filter(p => p._id == $pet)?.[0] || {appointments: []};
-	petApts = petObj.appointments;
 
-    $: petApts = [...$user.pets[$pet].appointments];
-    $: app = petApts.filter((a) => (a._id == [data._id]))[0];
-    $: console.log(app, petApts, "AAAAAAAAAAAAAA");
+    let userObject = {};
+    let petsArr = [];
+    let petObj = {};
+    let petApts = [];
+    onMount(async () => {
+        await axios
+            .get($URL + "/user", {
+                headers: {
+                    authentication: `Bearer ${sessionStorage.getItem(
+                        "user-token"
+                    )}`,
+                },
+            })
+            .then((res) => {
+                userObject = res.data;
+                petsArr = userObject.pets;
+                petObj = petsArr[0];
+                petApts = petObj.appointments;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
+    $: petObj = petsArr?.filter((p) => p._id == $pet)?.[0] || { appointments: [] };
+    $: petApts = petObj.appointments;
+	$: $pet = petsArr[0] && $pet == 0 ? petsArr[0]._id : $pet;
+    $: console.log("APPOINTS", petApts);
+
+    $: app = petApts.filter((a) => a._id == data.id)[0];
+    // $: console.log(app, petApts, "AAAAAAAAAAAAAA");
     $: status = getAppointmentStatus(app, petApts);
-    
+
     let view = "Upcoming";
     $: viewableAppointmentList = petApts
         .sort(vaccineComparator)
@@ -53,12 +55,15 @@
                 return new Date(apt.dateTime) > new Date();
             }
         });
+    $: console.log("PETSARR", petsArr);
 </script>
 
 <section class="VaccinePage">
-    <Dropdown options={$user.pets} value={$pet} />
-    <VaccineDetailCard appointment={app} {status} />
-    <br>
+    <Dropdown {petsArr} value={$pet} />
+    <!-- {#if !petApts || petApts.length == 0} -->
+        <VaccineDetailCard appointment={app} {status} />
+    <!-- {/if} -->
+    <br />
     <div class="HeadingLine">
         <p>{view + " appointments"}</p>
         <button
@@ -71,14 +76,19 @@
         </button>
     </div>
     <section class="ViewList">
-        {#each viewableAppointmentList as appointment, i}
-            {#if !(appointment.id == app.id)}
-                <VaccineCard
-                    {appointment}
-                    status={getAppointmentStatus(appointment, apts)}
-                />
-            {/if}
-        {/each}
+        {#if viewableAppointmentList.length != 0}
+            {#each viewableAppointmentList as appointment, i}
+                {#if !(app == undefined || appointment._id == app._id)}
+                    <VaccineCard
+                        {appointment}
+                        status={getAppointmentStatus(appointment, petApts)}
+                    />
+                {/if}
+            {/each}
+        {:else}
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <img src="/empty-home-vaccine.svg" />
+        {/if}
     </section>
     <button
         class="FloatingButton"
@@ -86,11 +96,7 @@
             goto("/vaccine/addVaccineSchedule");
         }}
     >
-        <img
-            src="/add-icon.png"
-            alt="Add Icon"
-            class="FloatingButtonImg"
-        />
+        <img src="/add-icon.png" alt="Add Icon" class="FloatingButtonImg" />
         <p>Add vaccine schedule</p>
     </button>
 </section>
@@ -108,7 +114,7 @@
         border-radius: 0.75rem;
         height: 1.5rem;
         font-size: var(--font-s);
-        width: 25%;
+        width: 30%;
     }
     .ViewList {
         display: flex;

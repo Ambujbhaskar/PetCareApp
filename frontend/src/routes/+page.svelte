@@ -26,14 +26,15 @@
 				},
 			})
 			.then((res) => {
-				console.log("res", res);
+				// console.log("res", res);
 				userObject = res.data;
 				petsArr = userObject.pets;
-				console.log(petsArr);
+				// console.log(petsArr);
 				petObj = petsArr[0];
-				console.log(petObj);
+				// console.log(petObj);
 				petApts = petObj.appointments;
-				console.log(petApts);
+
+				// console.log(petApts);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -41,9 +42,9 @@
 	});
 
 	$: console.log("USEROBJ", userObject);
-	
-	petObj = petsArr.filter(p => p._id == $pet)?.[0] || {appointments: []};
-	petApts = petObj.appointments;
+	$: $pet = petsArr[0] && $pet == 0 ? petsArr[0]._id : $pet;
+	$: petObj = petsArr.filter((p) => p._id == $pet)?.[0] || { appointments: [] };
+	$: petApts = petObj.appointments;
 
 	$: nextPetAppointment = petApts.reduce((acc, curr) => {
 		const status = getAppointmentStatus(curr, petApts);
@@ -53,7 +54,7 @@
 		return acc;
 	}, null);
 
-	$: console.log("NEXT", nextPetAppointment);
+	// $: console.log("NEXT", nextPetAppointment);
 </script>
 
 <svelte:head>
@@ -62,7 +63,7 @@
 </svelte:head>
 
 <section>
-	<Dropdown options={petsArr} value={$pet} />
+	<Dropdown bind:petsArr value={$pet} />
 	<div class="Appointment">
 		<h4>Next Vaccine Appointment</h4>
 		{#if nextPetAppointment != null}

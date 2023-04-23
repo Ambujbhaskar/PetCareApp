@@ -3,11 +3,12 @@
     export let value;
     export let key;
     export let isDropdownActive;
-    export let options;
+    export let petsArr;
 
     $: option =
-        options.filter((option) => option.id == key)[0] ||
+        petsArr?.filter((option) => option._id == key)[0] ||
         {name: "", image_uri: ""};
+    // $: console.log("OPTIONS", petsArr);
     // $: console.log("OPTION", option);
 
     function selectOption() {

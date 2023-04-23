@@ -10,7 +10,7 @@
         hour: "numeric",
         minute: "2-digit",
     });
-    $: clinic = appointment.clinic_id;
+    $: clinic = appointment.clinic_name;
     $: doctor = appointment.doctor_name;
 </script>
 

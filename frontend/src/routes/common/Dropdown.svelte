@@ -3,13 +3,11 @@
     import { user } from "$lib/stores";
     import Option from "./Option.svelte";
 
-    export let options;
+    export let petsArr;
     export let value;
 
-    // $: console.log("OPTIONS", options);
-    $: selectedOption =
-        options.filter((option) => option._id == value)[0] ||
-        [];
+    $: console.log("petsArr", petsArr);
+    $: selectedOption = petsArr?.filter((option) => option._id == value)[0] || {};
     // $: console.log("SO", selectedOption);
     let state = false;
     const imgsrc = "/down-arrow-idle.svg";
@@ -32,7 +30,7 @@
             key={selectedOption._id}
             bind:value
             isDropdownActive={state}
-            {options}
+            {petsArr}
         />
         <span>
             <img src={imgsrc} alt="dropdown button" class="DropdownButton" />
@@ -40,13 +38,13 @@
     </div>
     {#if state}
         <div class={"List" + (state ? "Active" : "Idle")}>
-            {#each options as option}
+            {#each petsArr as option}
                 {#if option._id != value}
                     <Option
                         key={option._id}
                         bind:value
                         isDropdownActive={state}
-                        {options}
+                        bind:petsArr
                     />
                 {/if}
             {/each}

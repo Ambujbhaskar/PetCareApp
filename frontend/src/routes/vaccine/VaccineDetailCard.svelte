@@ -1,6 +1,7 @@
 <script>
-    import { user, pet } from "$lib/stores";
+    import { user, pet, URL } from "$lib/stores";
     import { goto } from "$app/navigation";
+    import axios from "axios";
 
     import availableVaccines from "$lib/data/vaccine";
 
@@ -13,16 +14,33 @@
         hour: "numeric",
         minute: "2-digit",
     });
-    $: clinic = appointment?.clinic_id;
+    $: clinic = appointment?.clinic_name;
     $: doctor = appointment?.doctor_name;
     $: vaccines = appointment?.vaccines;
+    $: location = { ...appointment?.location };
+    $: isCompleted = appointment?.completed;
     export let status;
+
+    async function markAsDone(req) {
+        axios
+            .patch($URL + "/appointments/" + id, req, {
+                headers: {
+                    authentication: `Bearer ${sessionStorage.getItem(
+                        "user-token"
+                    )}`,
+                },
+            })
+            .then((res) => console.log("markasdone response", res))
+            .catch((err) => {
+                console.log(err);
+            });
+    }
 </script>
 
 <div class="VaccineDetailCard">
     <span class={"Date " + (appointment?.completed ? "Completed" : status)}>
-        <h1>{day}</h1>
-        <h4>{month.toUpperCase()}</h4>
+        <h1>{day == "Invalid Date"?"Loading":day}</h1>
+        <h4>{month.toUpperCase() == "INVALID DATE"?"":month.toUpperCase()}</h4>
     </span>
     <span class="CardContentArea">
         <div>
@@ -36,14 +54,21 @@
         <h5
             class={(status != "Next"
                 ? status
-                : appointment?.completed
+                : isCompleted
                 ? "Completed"
                 : "Next") + "Text"}
         >
-            {(appointment?.completed ? "Completed" : status) + " Appointment"}
+            {(isCompleted ? "Completed" : status) + " Appointment"}
         </h5>
         <div>
-            <a href={"http://maps.google.com/maps?z=12&t=m&q=loc:" + appointment?.location?.lat +"+"+ appointment?.location?.lng } target="_blank" class="MapButton" >
+            <a
+                href={"http://maps.google.com/maps?z=12&t=m&q=loc:" +
+                    location?.latitude +
+                    "+" +
+                    location?.longitude}
+                target="_blank"
+                class="MapButton"
+            >
                 <!-- svelte-ignore a11y-missing-attribute -->
                 <img src={"/direction-icon.svg"} />
                 <h4>Open in Maps</h4>
@@ -56,44 +81,46 @@
                 <img src={"/edit-icon-green.svg"} />
             </button>
         </div>
-        {#if !appointment?.completed}
+        {#if !isCompleted}
             <button
                 class={"DoneButton"}
                 on:click={() => {
-                    $user.pets[$pet].appointments.filter(
-                        (apt) => apt.id == id
-                    )[0].completed = true;
-                    console.log("Store:", $user);
+                    let req = {
+                        completed: true,
+                        petId: $pet
+                    };
+                    markAsDone(req);
                     status = "Completed";
 
-                    if (!vaccines || vaccines.length != 0) {
-                        console.log("vaccines of this appt:", vaccines);
-                        vaccines.forEach((vax) => {
-                            let v = availableVaccines.filter(
-                                (vac) => vac.name == vax
-                            )[0];
-                            if (
-                                v != undefined &&
-                                v.maxDoses > appointment.doseNo
-                            ) {
-                                // create new appointment
-                                let apts = $user.pets[$pet].appointments;
-                                let newDate = new Date(appointmentDate);
-                                newDate.setDate(newDate.getDate() + v.gap);
-                                apts.push({
-                                    id: apts.length,
-                                    dateTime: newDate.toLocaleString(),
-                                    clinic: clinic,
-                                    doctor: doctor,
-                                    vaccines: [vax],
-                                    doseNo: appointment.doseNo + 1,
-                                    completed: false,
-                                    location: { ...appointment.location },
-                                });
-                            }
-                        });
-                    }
-                    console.log("Store:", $user);
+                    // auto generate appointments based on vaccines
+
+                    // if (!vaccines || vaccines.length != 0) {
+                    //     console.log("vaccines of this appt:", vaccines);
+                    //     vaccines.forEach((vax) => {
+                    //         let v = availableVaccines.filter(
+                    //             (vac) => vac.name == vax
+                    //         )[0];
+                    //         if (
+                    //             v != undefined &&
+                    //             v.maxDoses > appointment.doseNo
+                    //         ) {
+                    //             // create new appointment
+                    //             let apts = $user.pets[$pet].appointments;
+                    //             let newDate = new Date(appointmentDate);
+                    //             newDate.setDate(newDate.getDate() + v.gap);
+                    //             apts.push();
+                    //             {
+                    //                 date_time: newDate.toLocaleString(),
+                    //                 clinic_name: clinic,
+                    //                 doctor_name: doctor,
+                    //                 vaccines: [vax],
+                    //                 doseNo: appointment.doseNo + 1,
+                    //                 completed: false,
+                    //                 location: { ...appointment.location },
+                    //             }
+                    //         }
+                    //     });
+                    // }
                 }}
             >
                 <!-- svelte-ignore a11y-missing-attribute -->

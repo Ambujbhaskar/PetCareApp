@@ -1,10 +1,41 @@
 <script>
-    import { pet } from "$lib/stores.js";
-    import { user } from "$lib/stores.js";
+    import { pet, user, URL } from "$lib/stores.js";
     import { goto } from "$app/navigation";
-
+    import axios from "axios";
     import Dropdown from "/src/routes/common/Dropdown.svelte";
-    let pets = [...$user.pets];
+    import { onMount } from "svelte";
+    let userObject = {};
+    let petsArr = [];
+    onMount(async () => {
+        await axios
+            .get($URL + "/user", {
+                headers: {
+                    authentication: `Bearer ${sessionStorage.getItem(
+                        "user-token"
+                    )}`,
+                },
+            })
+            .then((res) => {
+                userObject = res.data;
+                petsArr = userObject.pets;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
+
+    async function addVaccine(request) {
+        axios
+            .post($URL + "/appointments", request, {
+                headers: {
+                    authentication: `Bearer ${sessionStorage.getItem(
+                        "user-token"
+                    )}`,
+                },
+            })
+            .then(goto("/"))
+            .catch((err) => console.log(err));
+    }
 
     const template = {
         clinic: "",
@@ -25,7 +56,7 @@
 </script>
 
 <div class="AddVaccines">
-    <Dropdown options={pets} value={$pet} />
+    <Dropdown {petsArr} value={$pet} />
     <div class="Illustration">
         <h4>Add Vaccination Schedule</h4>
         <img src="/add-vax-schedule-green.png" alt="Add vaccine schedule" />
@@ -136,21 +167,29 @@
             let temp = { ...formData };
 
             temp.dateTime = new Date(
-                temp.date.day + " " + temp.date.month + " " + temp.date.year + " " + temp.time
+                temp.date.day +
+                    " " +
+                    temp.date.month +
+                    " " +
+                    temp.date.year +
+                    " " +
+                    temp.time
             ).toLocaleString();
-            temp.id = ($user.pets[$pet].appointments).length,
+            // temp.id = ($user.pets[$pet].appointments).length,
             delete temp.vaccine;
             delete temp.date;
             temp.completed = false;
 
-            console.log("Adding to vaccine db:", temp);
+            let req = {
+                completed: false,
+                date_time: temp.dateTime,
+                doctor_name: temp.doctor,
+                location: { ...temp.location },
+                clinic_name: temp.clinic,
+            };
+            console.log("Adding to vaccine db:", req);
 
-            /*
-             * PUT request to add appointment
-            */
-           
-            $user.pets[$pet].appointments.push(temp);
-            goto("/vaccine");
+            addVaccine(req);
         }}
     >
         <!-- svelte-ignore a11y-missing-attribute -->

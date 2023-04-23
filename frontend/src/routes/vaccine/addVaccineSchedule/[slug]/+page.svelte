@@ -1,21 +1,64 @@
 <script>
-    import { pet } from "$lib/stores.js";
-    import { user } from "$lib/stores.js";
+    import { pet, user, URL } from "$lib/stores.js";
     import { goto } from "$app/navigation";
     import Dropdown from "/src/routes/common/Dropdown.svelte";
+    import axios from "axios";
+    import { onMount } from "svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
 
-    /**
-     * FETCH APPOINTments
-    */
-    let pets = [...$user.pets];
-    $: data = {
-        ...$user.pets[$pet].appointments.filter((apt) => apt.id == data.id)[0],
+    let userObject = {};
+    let petsArr = [];
+    let petObj = {};
+    let petApts = [];
+    onMount(async () => {
+        await axios
+            .get($URL + "/user", {
+                headers: {
+                    authentication: `Bearer ${sessionStorage.getItem(
+                        "user-token"
+                    )}`,
+                },
+            })
+            .then((res) => {
+                userObject = res.data;
+                petsArr = userObject.pets;
+                petObj = petsArr[0];
+                petApts = petObj.appointments;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
+    async function editVaccine(request) {
+        axios
+            .patch($URL + "/appointments/" + appointment._id, request, {
+                headers: {
+                    authentication: `Bearer ${sessionStorage.getItem(
+                        "user-token"
+                    )}`,
+                },
+            })
+            .then((res) => goto("/"))
+            .catch((err) => console.log(err));
+    }
+
+    petObj = petsArr.filter((p) => p._id == $pet)?.[0] || { appointments: [] };
+    petApts = petObj.appointments;
+
+    $: appointment = petApts.filter((a) => a._id == data.id)[0] || {
+        date_time: "",
+        clnic_name: "",
+        doctor_name: "",
+        location: {
+            lat: "",
+            lng: "",
+        },
     };
-    $: date = new Date(data.dateTime);
-    // $: console.log(data, date);
+    $: console.log("EDIT VAX", appointment);
+
+    $: date = new Date(appointment.date_time);
     $: day = date.toLocaleDateString([], { day: "numeric" });
     $: month = date.toLocaleDateString([], { month: "long" });
     $: time = date.toLocaleTimeString([], {
@@ -23,9 +66,10 @@
         minute: "2-digit",
     });
     $: yr = date.getFullYear();
+
     $: template = {
-        clinic: data["clinic"],
-        doctor: data["doctor"],
+        clinic: appointment["clinic_name"],
+        doctor: appointment["doctor_name"],
         date: {
             day: day,
             month: month,
@@ -33,14 +77,15 @@
         },
         time: time,
         vaccine: "",
-        vaccines: data.vaccines == undefined ? [] : [...data.vaccines],
-        location: { ...data.location },
+        vaccines:
+            appointment.vaccines == undefined ? [] : [...appointment.vaccines],
+        location: { ...appointment.location },
     };
     $: formData = { ...template };
 </script>
 
 <div class="AddVaccines">
-    <Dropdown options={pets} value={$pet} />
+    <Dropdown {petsArr} value={$pet} />
     <div class="Illustration">
         <h4>Add Vaccination Schedule</h4>
         <img src="/add-vax-schedule-green.png" alt="Add vaccine schedule" />
@@ -164,23 +209,16 @@
             temp.completed = false;
             temp.id = data.id;
 
-            console.log("Editing appointment in db:", temp);
+            let req = {
+                completed: false,
+                date_time: temp.dateTime,
+                doctor_name: temp.doctor,
+                location: { ...temp.location },
+                clinic_name: temp.clinic,
+            };
+            console.log("Editing appointment in db:", req);
 
-            /*
-             * PUT request to replace existing appointment
-            */
-            let ind = 0;
-            let apts = $user.pets[$pet].appointments;
-            for (let i = 0; i < apts.length; i++) {
-                if (apts[i].id == data.id) {
-                    ind = i;
-                }
-            }
-            $user.pets[$pet].appointments[ind] = temp;
-
-            console.log("Userstore after edit:", $user);
-
-            goto("/vaccine");
+            editVaccine(req);
         }}
     >
         <!-- svelte-ignore a11y-missing-attribute -->
