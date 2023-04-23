@@ -23,7 +23,8 @@ router.post('/', async (req, res, next) => {
       !req.body.petId ||
 			!req.body.clinic_id ||
 			!req.body.date_time ||
-			!req.body.doctor_name
+			!req.body.doctor_name ||
+      !req.body.vaccines 
 		)
 			return res.status(400).json({message: "malformed request"})
 		
@@ -44,7 +45,7 @@ router.post('/', async (req, res, next) => {
       doctor_name: req.body.doctor_name,
       completed: false,
       location: clinic.location,
-      user_id: req.user_id,
+      vaccines: req.body.vaccines
     });
 
     user.pets.id(req.body.petId)?.appointments.push(appointment);
@@ -73,6 +74,7 @@ router.patch('/:appointmentId', async (req, res, next) => {
     copyAppointment.doctor_name = req.body.doctor_name || copyAppointment.doctor_name;
     copyAppointment.date_time = req.body.date_time || copyAppointment.date_time;
     copyAppointment.completed = req.body.completed !== undefined ? req.body.completed : copyAppointment.completed;
+    copyAppointment.vaccines = req.body.vaccines || copyAppointment.vaccines;
 
     const clinic = await Clinic.findById(copyAppointment.clinic_id);
     if (!clinic) {
