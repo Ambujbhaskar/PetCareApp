@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const { Location, Clinic, Request } = require('../models');
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+const fs = require('fs');
 
 router.get('/', async (req, res) => {
   try {
@@ -21,13 +24,16 @@ router.get('/user', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', upload.single('image_uri'), async (req, res, next) => {
   try {
+    const buffer = fs.readFileSync(req.file.path);
+    const image_uri = `data:${req.file.mimetype};base64,${buffer.toString('base64')}`;
+    await fs.promises.unlink(req.file.path);
+
     if (
       !req.body.name ||
       !req.body.contact ||
       !req.body.note || 
-      !req.body.image_uri ||
       !req.body.date_time_missing ||
       !req.body.last_seen ||
       !req.body.last_location
@@ -40,7 +46,7 @@ router.post('/', async (req, res, next) => {
       name: req.body.name,
       contact: req.body.contact,
       note: req.body.note,
-      image_uri: req.body.image_uri,
+      image_uri: image_uri,
       date_time_missing: req.body.date_time_missing,
       last_seen: req.body.last_seen,
       last_seen_location: new Location(req.body.last_location)
